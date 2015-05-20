@@ -1,5 +1,6 @@
 package com.example.cas.projectplant;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -12,8 +13,12 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 import android.app.Activity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
@@ -68,13 +73,13 @@ public class MainActivity extends Activity {
                     JSONObject c = dataJsonArr.getJSONObject(i);
 
                     // Storing each json item in variable
+                    final String id = c.getString("plantID");
+                    String name = c.getString("plantNaam");
                     String type = c.getString("plantType");
-                    String minTemp = c.getString("plantMinTemp");
-                    String maxTemp = c.getString("plantMaxTemp");
-                    String minLight = c.getString("plantMinLicht");
-                    String maxLight = c.getString("plantMaxLicht");
-                    String minMoist = c.getString("plantMinVochtigheid");
-                    String maxMoist = c.getString("plantMaxVochtigheid");
+                    String temp = c.getString("plantTemperatuur");
+                    String light = c.getString("plantLichtNiveau");
+                    String moist = c.getString("plantVochtigheid");
+                    String timeDate = c.getString("meetTijdDatum");
 
                     // show the values in our logcat
                     /*Log.e(TAG, "id: " + firstname
@@ -86,13 +91,13 @@ public class MainActivity extends Activity {
                     //LinearLayout linearLayout = (LinearLayout)findViewById(R.id.info);
                     LinearLayout layoutData = new LinearLayout(layout.getContext());
                     TextView valueTV = new TextView(layout.getContext());
-                    valueTV.setText("Type: " + type
-                            + ",\n minTemp: " + minTemp
-                            + ",\n maxTemp: " + maxTemp
-                            + ",\n minLight: " + minLight
-                            + ",\n maxLight: " + maxTemp
-                            + ",\n minMoist: " + minMoist
-                            + ",\n maxMoist: " + maxMoist);
+                    valueTV.setText("ID: " + id
+                            + ",\n Naam: " + name
+                            + ",\n Type: " + type
+                            + ",\n Temperatuur: " + temp
+                            + ",\n Licht: " + light
+                            + ",\n Vochtigheid: " + moist
+                            + ",\n Tijd Datum: " + timeDate);
                     valueTV.setTypeface(null, Typeface.BOLD);
                     //valueTV.setId(5);
                     valueTV.setLayoutParams(new LinearLayout.LayoutParams(
@@ -106,6 +111,21 @@ public class MainActivity extends Activity {
                     valueTV.setPadding(10, 10, 10, 10);
                     layoutData.setBackgroundColor(Color.parseColor("#aaaaff"));
                     layout.setBackgroundColor(Color.parseColor("#ffaaaa"));
+
+                    /*Button btn = new Button(layout.getContext());
+                    btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    btn.setId(i);
+                    btn.setText("Button: " + i);
+                    layoutData.addView(btn);
+
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getApplicationContext(), "Button " + type + " Clicked", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });*/
+
                 }
 
             } catch (JSONException e) {

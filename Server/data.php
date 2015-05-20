@@ -27,7 +27,7 @@ try {
 //$company_id = isset($_GET['company_id']) ? $_GET['company_id'] : die();
 
 // SQL query and prepared statement
-$stmt = $con->prepare("SELECT * FROM PLANT_GEGEVENS");
+$stmt = $con->prepare("SELECT * FROM PLANT");
 //$stmt->bindParam(':company_id', $company_id);
 $stmt->execute();
 
