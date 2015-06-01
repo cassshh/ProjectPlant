@@ -2,7 +2,7 @@
 
 for ($i = 0; $i < 10; $i++) {
 
-$plantID = 1;
+$plantID = 3;
 $temp = rand(0,40);
 $light = rand(10,100);
 $moist = rand(0,99);

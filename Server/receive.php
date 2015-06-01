@@ -15,7 +15,7 @@ $meetTijd = $_SESSION['meetTijd'];
 $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant_monitor');
         if (!$connect)
         {
-            DIE('could not connect: ' . mysqli_error());
+            DIE('Kan geen verbinding maken: ' . mysqli_error());
         } 
         else
         {
@@ -23,12 +23,13 @@ $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant_monitor');
             $result = mysqli_query($connect, $query);
             if($result)
             {
-                echo 'heuuhh!';
+                echo 'De plantgegevens zijn succesvol toegevoegd aan de database';
             }
             else
             {
-                echo 'werkt niet';
+                echo 'Er ging iets mis bij het uploaden van de gegevens';
             }      
         }
+mysqli_close($connect);
 ?>
 

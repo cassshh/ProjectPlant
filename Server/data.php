@@ -15,7 +15,7 @@ ini_set('display_errors', 1);*/
 $host = "127.0.0.1";
 $username = "plant";
 $password = (String)'$_Tan1900';
-$db_name = "plant_monitor";
+$db_name = "plant_data";
 
 try {
     $con = new PDO("mysql:host={$host};dbname={$db_name}", $username, $password);
@@ -23,20 +23,47 @@ try {
     echo "Connection error: " . $exception->getMessage();
 }
 
-// parameter
-//$company_id = isset($_GET['company_id']) ? $_GET['company_id'] : die();
 
-// SQL query and prepared statement
-$stmt = $con->prepare("SELECT * FROM PLANT");
-//$stmt->bindParam(':company_id', $company_id);
-$stmt->execute();
+if(isset($_GET['id']) && !empty($_GET['id'])){
+	$id = $_GET['id'];
+	$stmt = $con->prepare("SELECT * FROM type WHERE type_id LIKE {$id}");
+	$stmt->execute();
+	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	// get the results in array
+	$stmt = $con->prepare("SELECT * FROM data WHERE (DATEDIFF(NOW(), dateTime) <= 1) AND plant_id = '{$id}' ORDER BY dateTime");
+	$stmt->execute();
+	// get the results in array
+	$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// get the results in array
-$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	if(empty($results)){
+		//No succes
+	}
+	// you can remove this line if you want
+	$results = array('Data' => $results);
+	$results['Graph'] = $data;
 
-// you can remove this line if you want
-$results = array('Data' => $results);
+	// now show the json tring
+	echo json_encode($results);
 
-// now show the json tring
-echo json_encode($results);
+} else {
+	// SQL query and prepared statement
+	$stmt = $con->prepare("SELECT * FROM plant");
+	$stmt->execute();
+	// get the results in array
+	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+	for($i = 0; $i < count($results); $i++){
+		$stmt = $con->prepare("SELECT * FROM type WHERE type_id LIKE {$results[$i]['type_id']}");
+		$stmt->execute();
+		// get the results in array
+		$resultsType = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$results[$i]['type'] = $resultsType;
+	}
+
+	// you can remove this line if you want
+	$results = array('Data' => $results);
+
+	// now show the json tring
+	echo json_encode($results);
+}
 ?>

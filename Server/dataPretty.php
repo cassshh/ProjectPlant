@@ -15,7 +15,7 @@ ini_set('display_errors', 1);*/
 $host = "127.0.0.1";
 $username = "plant";
 $password = (String)'$_Tan1900';
-$db_name = "plant_monitor";
+$db_name = "plant_data";
 
 try {
     $con = new PDO("mysql:host={$host};dbname={$db_name}", $username, $password);
@@ -23,22 +23,52 @@ try {
     echo "Connection error: " . $exception->getMessage();
 }
 
-// parameter
-//$company_id = isset($_GET['company_id']) ? $_GET['company_id'] : die();
 
-// SQL query and prepared statement
-$stmt = $con->prepare("SELECT * FROM PLANT");
-//$stmt->bindParam(':company_id', $company_id);
-$stmt->execute();
+if(isset($_GET['id']) && !empty($_GET['id'])){
+	$id = $_GET['id'];
+	$stmt = $con->prepare("SELECT * FROM type WHERE type_id = '{$id}'");
+	$stmt->execute();
+	// get the results in array
+	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// get the results in array
-$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	$stmt = $con->prepare("SELECT * FROM data WHERE (DATEDIFF(NOW(), dateTime) <= 1) AND plant_id = '{$id}' ORDER BY dateTime");
+	$stmt->execute();
+	// get the results in array
+	$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// you can remove this line if you want
-$results = array('Data' => $results);
+	if(empty($results)){
+		//No succes
+	}
+	// you can remove this line if you want
+	$results = array('Data' => $results);
+	$results['Graph'] = $data;
 
-// now show the json tring
-echo "<pre>";
-echo json_encode($results, JSON_PRETTY_PRINT);
-echo "</pre>";
+	// now show the json tring
+	echo "<pre>";
+	echo json_encode($results, JSON_PRETTY_PRINT);
+	echo "</pre>";
+
+} else {
+	// SQL query and prepared statement
+	$stmt = $con->prepare("SELECT * FROM plant");
+	$stmt->execute();
+	// get the results in array
+	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+	for($i = 0; $i < count($results); $i++){
+		$stmt = $con->prepare("SELECT * FROM type WHERE type_id = '{$results[$i]['type_id']}'");
+		$stmt->execute();
+		// get the results in array
+		$resultsType = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$results[$i]['type'] = $resultsType;
+	}
+
+	// you can remove this line if you want
+	$results = array('Data' => $results);
+
+	// now show the json tring
+	echo "<pre>";
+	echo json_encode($results, JSON_PRETTY_PRINT);
+	echo "</pre>";
+}
 ?>
