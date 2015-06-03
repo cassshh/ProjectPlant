@@ -1,15 +1,17 @@
 <?php
 session_start();
 $user = $_SESSION['username'];
-$plant_id = $_SESSION['plant_id'];
-$plant_name = $_SESSION['name'];
+$get = $_GET['id'];
+$_SESSION['plant_name'] = $get;
 
 if(!$_SESSION)
 {
     header("location: http://plant.serverict.nl/homepagina.php");
 }
-else
+else 
 {
+include 'plant.php';
+}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> 
 <html>
@@ -28,7 +30,7 @@ else
                     <div class='nav-sub'>
                         <ul>
                             <li><a href='registeredplants.php'>Planten info</a></li>
-                            <li><a href='add_plant.php'>Registreer een plant</a></li>
+                            <li><a href='register.php'>Registreer een plant</a></li>
                         </ul>
                     </div>
                 </div>
@@ -38,7 +40,7 @@ else
                 <div class='nav-content'>
                     <div class='nav-sub'>
                         <ul>
-                            <li><a href='plants.php'>kies je plant</a></li>
+                            <li><a href='plants.php'>Kies je plant</a></li>
                         </ul>
                     </div>
                 </div>
@@ -75,11 +77,10 @@ else
             </div>
         </div>
     </div>
-    <div class='p'><p>Hieronder staat een overzicht van alle geregistreerde planten met hun bijhorende gegevens</p></div>
+    <div class='p'>
+        <p>Hieronder staat een overzicht van de plant vochtigheid gegevens van <?php echo $get ?></p>
+        <img src='http://plant.serverict.nl/moist.php'>
+    </div>
     </br>
 </body>
 </html>
-<?php
-include 'plantgegevens.php';
-}
-?>

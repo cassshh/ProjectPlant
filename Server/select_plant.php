@@ -11,7 +11,8 @@ else
     $query = "
     SELECT login.user_id,
     login.username,
-    plant.name
+    plant.name,
+    plant.plant_id
     FROM plant
     INNER JOIN login
     ON login.user_id = plant.user_id
@@ -30,15 +31,21 @@ else
     echo '<table> 
             <tr>
                 <td>plantnaam</td>
-                <td>Plantdetails</td>
+                <td>Temperatuur/tijd</td>
+                <td>Vochtigheid/tijd</td>
+                <td>licht/tijd</td>
             </tr>';
         while (($row = mysqli_fetch_assoc($result)) > 1)
         {
+            $id = $row['plant_id'];
+            $name = $row['name'];
             echo 
-            '<tr>
-                <td>' . $row['name'] . '</td>
-                <td><a href="plantdata.php" class="link">Bekijk hier de gegevens</a></td>
-            </tr>';
+            "<tr>
+                <td>" . $name . "</td>
+                <td><a href=\"plantdata.php?id={$row['name']}\" class='redButton'>Temperatuur</a></td>  
+                <td><a href=\"plantdata2.php?id={$row['name']}\" class='blueButton'>Vochtigheid</a></td>  
+                <td><a href=\"plantdata3.php?id={$row['name']}\" class='orangeButton'>Licht</a></td>  
+            </tr>";
         }
     }
 }

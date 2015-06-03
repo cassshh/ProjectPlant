@@ -23,7 +23,6 @@ else
             INNER JOIN plant
             ON plant.name = data.name
             WHERE plant.name = '$plant_name'
-            LIMIT 0, 24
             ";
     
     $array = array();
@@ -33,14 +32,14 @@ else
     while ($row = mysql_fetch_assoc($result)) 
         {
             $date = $row["dateTime"];
-            $temperature = $row["temp"];
-            $array[$date]=$temperature;
+            $light = $row["light"];
+            $array[$date]=$light;
         }
     }
 $graph = new PHPGraphLib(750,500);
 $graph->addData($array);
-$graph->setTitle("temperatuur/tijd");
-$graph->setGradient("lime", "red");
+$graph->setTitle("plant licht niveau/tijd");
+$graph->setGradient("lime", "green");
 $graph->setBarOutlineColor("black");
 $graph->setLineColor("red");
 $graph->setbars(false);

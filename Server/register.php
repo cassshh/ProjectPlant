@@ -27,8 +27,12 @@ if (!(empty($_POST['username'])))
     }
     if (count($errors) === 0)
     {
-        $query = "INSERT INTO login VALUES('NULL', '" . $_POST['username'] . "', '" . $_POST['password'] . "')";
-
+        
+        $image = addslashes(file_get_contents($_FILES['image']['tmp_name']));
+        $image_name = addslashes($_FILES['image']['name']);
+        
+        $query = "INSERT INTO login VALUES('NULL', '" . $_POST['username'] . "', '" . $_POST['password'] . "', '$image', '$image_name')";
+        
         $result = mysqli_query($connect, $query) or die(mysqli_error($connect));
         mysqli_close($connect);
     }
@@ -52,7 +56,6 @@ if (!(empty($_POST['username'])))
                     <div class='nav-sub'>
                         <ul>
                             <li><a href='registeredplants.php'>Planten info</a></li>
-                            <li><a href='add_plant.php'>Registreer een plant</a></li>
                         </ul>
                     </div>
                 </div>
@@ -74,7 +77,7 @@ if (!(empty($_POST['username'])))
     </nav>	
     <div class='content'>
         <div class='login'>
-            <form action='register.php' method='POST'>
+            <form action='register.php' method='POST' enctype='multipart/form-data'>
         <p>Vul hier een gebruikersnaam en wachtwoord in om te registreren</p>
         </br>
         <table>
@@ -85,6 +88,10 @@ if (!(empty($_POST['username'])))
             <tr>
                 <td>Wachtwoord</td>
                 <td><input type='password' name='password'></td>
+            </tr>
+            <tr>
+                <td>foto</td> 
+                <td><input type="file" name="image"/></td>
             </tr>
             <tr>
                 <td colspan='2'><input type='submit' name='submit' value='Registreer'></td>
@@ -126,7 +133,7 @@ if (!(empty($_POST['username'])))
             <?php
             if($_SESSION)
             {
-                echo "<a class='visited' href='http://plant.serverict.nl/logout.php' class='nav-item'>Log uit</a>"; 
+                echo "<a class='test' href='http://plant.serverict.nl/logout.php' class='nav-item'>Log uit</a>"; 
             }
             ?>
             </div>

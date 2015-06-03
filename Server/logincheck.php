@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         else
         {
 			$connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant_login');
-			$query = "SELECT * FROM plant_data WHERE username='" . $_POST['username'] . "' AND password='" . $_POST['password'] . "'";
+			$query = "SELECT * FROM plant_data WHERE username='" . mysqli_real_escape_string($_POST['username']) . "' AND password='" . $_POST['password'] . "'";
 			$result = mysqli_query($connect, $query);
 			
 			$row = mysqli_fetch_assoc($result);

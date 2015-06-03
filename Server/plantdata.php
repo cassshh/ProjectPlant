@@ -1,5 +1,9 @@
 <?php
 session_start();
+$user = $_SESSION['username'];
+$get = $_GET['id'];
+$_SESSION['plant_name'] = $get;
+
 if(!$_SESSION)
 {
     header("location: http://plant.serverict.nl/homepagina.php");
@@ -36,7 +40,6 @@ include 'plant.php';
                 <div class='nav-content'>
                     <div class='nav-sub'>
                         <ul>
-                            <!--<li><a href='plantdata.php'>Planten gegevens</a></li>!-->
                             <li><a href='plants.php'>Kies je plant</a></li>
                         </ul>
                     </div>
@@ -44,7 +47,22 @@ include 'plant.php';
             </li>
             <li>
         </ul>
-        <div class='title'><p>Project Plant</p></div>
+        <?php
+        if(!$_SESSION)
+        {
+        ?>
+        <div class='title'><p>Project Plant</p>
+        </div>
+        <?php
+        }
+        else
+        {
+        ?>
+            <div class='title'><p>Ingelogd als <?php echo $user?></p>
+        </div>
+        <?php
+        }
+        ?>
     </nav>	
     <div class='content'>
         <div class="footer">
@@ -53,14 +71,14 @@ include 'plant.php';
             <?php
             if($_SESSION)
             {
-                echo "<a class='visited' href='http://plant.serverict.nl/logout.php' class='nav-item'>Log uit</a>"; 
+                echo "<a class='test' href='http://plant.serverict.nl/logout.php' class='nav-item'>Log uit</a>"; 
             }
             ?>
             </div>
         </div>
     </div>
     <div class='p'>
-        <p>Hieronder staat een overzicht van de gegevens van jou planten</p>
+        <p>Hieronder staat een overzicht van de temperatuurgegevens van <?php echo $get ?></p>
         <img src='http://plant.serverict.nl/graph.php'>
     </div>
     </br>

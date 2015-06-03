@@ -1,66 +1,18 @@
 <?php
-//session_start();
+session_start();
+$user = $_SESSION['username'];
+$id = $_SESSION['user_id'];
+$plant_id = $_SESSION['plant_id'];
+$type_id = $_SESSION['type_id'];
 
 $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant_data');
-if ($_SERVER['REQUEST_METHOD'] == 'POST')
-{
-if (isset($_POST['submit']))
-{
-$errors = [];
 
-if (!(empty($_POST['plant_name'])))
-{
-    $query = "SELECT * FROM login WHERE username='" . mysqli_real_escape_string($connect, $_POST['plant_name']) . "'";
-    $query2 = "SELECT type.name FROM type";
-    
-    $result = mysqli_query($connect, $query);
-    $result2 = mysqli_query($connect, $query2);
-    
-    if (mysqli_num_rows($result) > 0)
-    {
-        array_push($errors, 'Deze plantnaam bestaat al :(');
-    }
-    } 
-    else
-    {
-        array_push($errors, 'Je bent vergeten een naam in te vullen..');
-    }
-    
-    if (mysqli_num_rows($result2) < strlen($result2))
-    {
-        array_push($errors, 'Er ging iets mis met het ophalen van de plantgegevens');
-    }
-    else
-    {
-        $row = mysqli_fetch_assoc($result2);
-        if($row)
-        {
-            echo $name = $row['name'];
-        }
-        ?>
-        <tr>
-            <td>Plant type</td>
-            <td><select name='planttype' style='width: 100%'>
-                <option value='' name='Cactus'>Cactus</option>
-                <option value='Boom' name='Boom'>Boom</option>
-                <option value='Aloe Vera' name='Aloe Vera'>Aloe Vera</option>
-                <option value='Palm' name='Palm'>Palm</option>
-                <option value='Yolo' name='Yolo'>Yolo</option>
-                <option value='Swag' name='Swag'>Swag</option>
-                </select>
-            </td>
-        </tr>
-        <?php
-    }
-    
-    if (count($errors) === 0)
-    {
-        $query = "INSERT INTO plant VALUES('NULL', '" . $_POST['plant_name'] . "', 'NULL', 'NULL')";
+$query2 = "SELECT name FROM type";
+$result2 = mysqli_query($connect, $query2);
 
-        $result = mysqli_query($connect, $query) or die(mysqli_error($connect));
-        mysqli_close($connect);
-    }
-}
+if (mysqli_num_rows($result2) < strlen($result2))
+{
+    echo 'Er ging iets mis met het ophalen van de planttypes';
 }
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> 
@@ -89,8 +41,7 @@ if (!(empty($_POST['plant_name'])))
                 <div class='nav-content'>
                     <div class='nav-sub'>
                         <ul>
-                            <li><a href='plantdata.php'>Planten gegevens</a></li>
-                            <li><a href='add_plant.php'>Registreer een plant</a></li>
+                            <li><a href='plants.php'>Kies je plant</a></li>
                         </ul>
                     </div>
                 </div>
@@ -107,7 +58,22 @@ if (!(empty($_POST['plant_name'])))
             ?>
             <li>
         </ul>
-        <div class='title'><p>Project Plant</p></div>
+        <?php
+        if(!$_SESSION)
+        {
+        ?>
+        <div class='title'><p>Project Plant</p>
+        </div>
+        <?php
+        }
+        else
+        {
+        ?>
+            <div class='title'><p>Ingelogd als <?php echo $user?></p>
+        </div>
+        <?php
+        }
+        ?>
     </nav>	
     <div class='content'>
         <div class='login'>
@@ -119,40 +85,21 @@ if (!(empty($_POST['plant_name'])))
                 <td>Plantnaam</td>
                 <td><input type='text' name='plant_name'></td>
             </tr>
-
+            <tr>
+                <td>Plant type</td>
+                <td><select>
+                <?php 
+                while ($row2 = mysqli_fetch_assoc($result2))
+                {
+                echo '<option value="' . $row2['name'] . '">' . $row2['name'] . '</option>';
+                }
+                ?>
+                    </select></td>
+            </tr>
             <tr>
                 <td colspan='2'><input type='submit' name='submit' value='Registreer'></td>
             </tr>
         </table>
-        <?php
-        if ($_SERVER['REQUEST_METHOD'] == 'POST')
-        {
-        if (isset($_POST['submit']))
-        {
-        if (count($errors) > 0)
-        {
-            ?>
-            <ul>
-                <?php
-                foreach ($errors as $error)
-                {
-                    ?>
-                        <li>
-                            <?php echo $error; ?>
-                        </li>
-                    <?php
-                }
-                ?>
-            </ul>
-            <?php
-        } 
-        else
-        {
-            echo "<ul></br><li>Je plant is toegevoegd aan de database!</li></ul>";
-        }
-    }
-}
-?>
         </div>
         <div class="footer">
             <div id="footerlinks">&copy; 2015</div>
@@ -160,7 +107,7 @@ if (!(empty($_POST['plant_name'])))
             <?php
             if($_SESSION)
             {
-                echo "<a class='visited' href='http://plant.serverict.nl/logout.php' class='nav-item'>Log uit</a>"; 
+                echo "<a class='test' href='http://plant.serverict.nl/logout.php' class='nav-item'>Log uit</a>"; 
             }
             ?>
             </div>
@@ -170,3 +117,41 @@ if (!(empty($_POST['plant_name'])))
     </br>
 </body>
 </html>
+<?php
+//if submit is pressed
+if ($_SERVER['REQUEST_METHOD'] == 'POST')
+{
+if (isset($_POST['submit']))
+{
+$errors = [];
+
+if (!(empty($_POST['plant_name'])))
+{   
+    $query = "SELECT * FROM plant WHERE name='" . mysqli_real_escape_string($connect, $_POST['plant_name']) . "'";
+    
+    $result = mysqli_query($connect, $query);
+    
+    if (mysqli_num_rows($result) > 0)
+    {
+        echo 'Deze plantnaam bestaat al :(' . '</br>
+              Klik op <a href="http://plant.serverict.nl/registeredplants.php"> deze link</a> om alle geregistreerde plantnamen te bekijken';
+    } 
+    else
+    {   
+        $plant = $_POST['plant_name'];
+        $plant_type = $_POST['plant_type'];
+        
+        $query = "INSERT INTO plant VALUES('$plant_id', '$plant', '$type_id', '$id')";
+        
+        $result = mysqli_query($connect, $query) or die(mysqli_error($connect));
+        
+        mysqli_close($connect);
+        
+        if($query)
+        {
+            echo 'Je plant is toegevoegd aan de database!';
+        }
+    }
+}
+}
+}

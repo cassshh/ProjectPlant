@@ -5,6 +5,8 @@
     </head>
     <body>
         <?php
+        $image = $_SESSION['image'];
+        $user = $_SESSION['username'];
         $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant_data');
         if (!$connect)
         {
@@ -12,7 +14,17 @@
         } 
         else
         {
-            $query = "SELECT * FROM type";
+            $query = "
+                    SELECT login.username,
+                    plant.name,
+                    type.name
+                    FROM plant
+                    INNER JOIN login
+                    ON plant.user_id = login.user_id
+                    INNER JOIN type
+                    ON plant.type_id = type.type_id
+                    ";
+            
             $result = mysqli_query($connect, $query);
             
             $rows = mysqli_num_rows($result);
@@ -25,28 +37,19 @@
             ?>
             <table>
             <tr>
-                <td>Plant ID</td>
+                <td>Gebruiker</td>
                 <td>Plantnaam</td>
-                <td>PlantMinTemp</td>
-                <td>PlantMaxTemp</td>
-                <td>plantMinLicht</td>
-                <td>PlantMaxLicht</td>
-                <td>PlantMinVochtigheid</td>
-                <td>PlantMaxVochtigheid</td>
+                <td>plantsoort</td>
             </tr>
             <?php
-            while (($row = mysqli_fetch_assoc($result)) > 1)
+            while (($row = mysqli_fetch_array($result)) > 1)
             {
+                $_SESSION['data_name'] = $row['name'];
                 echo 
                 '<tr>
-                    <td>' . $row['type_id'] . '</td>
-                    <td>' . $row['name'] . '</td>
-                    <td>' . $row['minTemp'] . '</td>
-                    <td>' . $row['maxTemp'] . '</td>
-                    <td>' . $row['minLight'] . '</td>
-                    <td>' . $row['maxLight'] . '</td>
-                    <td>' . $row['minMoist'] . '</td>
-                    <td>' . $row['maxMoist'] . '</td>
+                    <td>' . $user . '</br><img id="image" src="data:image/jpeg;base64,' . base64_encode($image) . '"/></td>
+                    <td>' . $row[1] . '</td>
+                    <td>' . $row[2] . '</td>
                 </tr>'
                 ;
             }

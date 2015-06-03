@@ -5,7 +5,10 @@
     </head>
     <body>
         <?php
-        $username = $_SESSION['username'];
+        session_start();   
+        $plant_name = $_GET['id'];
+        $_SESSION['[plant_name'] = $plant_name;
+        
         $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant_data');
 
         if (!$connect)
@@ -15,15 +18,16 @@
         else
         {
             $query = "
-            SELECT login.user_id,
-            data.temp,
-            data.light,
-            data.moist,
-            data.dateTime
+            SELECT temp,
+            dateTime,
+            light,
+            moist,
+            data.name
             FROM data
-            INNER JOIN login
-            ON login.user_id = data.plant_id
-            WHERE username = '" . $username . "'
+            INNER JOIN plant
+            ON data.name = plant.name
+            WHERE plant.name = '$plant_name'
+            AND data.name = '$plant_name'
             ";
             
             $result = mysqli_query($connect, $query);
@@ -48,7 +52,7 @@
             {
                 echo 
                 '<tr>
-                    <td>' . $row['temp'] . '</td>
+                    <td>' . $row['temp'] . "°" . '</td>
                     <td>' . $row['light'] . '</td>
                     <td>' . $row['moist'] . '</td>
                     <td>' . $row['dateTime'] . '</td>
