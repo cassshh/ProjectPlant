@@ -15,10 +15,10 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context="com.casnetwork.android.DisplayMessageActivity">
 
-        <com.jjoe64.graphview.GraphView
+        <!--<com.jjoe64.graphview.GraphView
             android:id="@+id/graph"
             android:layout_width="match_parent"
-            android:layout_height="200dip" />
+            android:layout_height="200dip" />-->
 
     </LinearLayout>
 </ScrollView>

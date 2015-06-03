@@ -8,9 +8,11 @@ import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +35,7 @@ import java.util.Date;
 public class DisplayMessageActivity extends Activity {
 
     LinearLayout linearLayout;
-    GraphView graph;
+    //GraphView graph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +45,9 @@ public class DisplayMessageActivity extends Activity {
         String message = intent.getStringExtra(MyActivity.EXTRA_MESSAGE);
 
         linearLayout = (LinearLayout) findViewById(R.id.layout);
-        graph = (GraphView) findViewById(R.id.graph);
+        //graph = (GraphView) findViewById(R.id.graph);
 
-        new JsonData(this, "http://plant.serverict.nl/data.php?id=" + message).execute();
+        new JsonData(this, "http://casnetwork.tk/plant/data.php?id=" + message).execute();
     }
 
     @Override
@@ -70,10 +72,22 @@ public class DisplayMessageActivity extends Activity {
                 Log.d("updateViewGraph", json.getString("Graph"));
 
                 JSONArray jsonArrayData = json.getJSONArray("Data");
+                JSONArray jsonArrayType = json.getJSONArray("Type");
                 JSONArray jsonArrayGraph = json.getJSONArray("Graph");
                 //Loop through Data array
                 if(jsonArrayData.length() != 0) {
                     for (int i = 0; i < jsonArrayData.length(); i++) {
+                        //code
+                        try {
+                            JSONObject c = jsonArrayData.getJSONObject(i);
+                            getActionBar().setTitle(c.getString("name") + " Data");
+                        }catch (JSONException e){
+                            //code
+                        }
+                    }
+                }
+                if(jsonArrayType.length() != 0) {
+                    for (int i = 0; i < jsonArrayType.length(); i++) {
                         LinearLayout linLay = new LinearLayout(this);
                         TextView txID = new TextView(this);
                         TextView txName = new TextView(this);
@@ -84,31 +98,31 @@ public class DisplayMessageActivity extends Activity {
                         TextView txMinMoist = new TextView(this);
                         TextView txMaxMoist = new TextView(this);
                         try {
-                            JSONObject c = jsonArrayData.getJSONObject(i);
+                            JSONObject c = jsonArrayType.getJSONObject(i);
                             txID.setText("Type ID: " + c.getString("type_id"));
                             txID.setPadding(10, 10, 10, 10);
-                            txID.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            //txID.setBackgroundColor(Color.parseColor("#ddffdd"));
                             txName.setText("Name: " + c.getString("name"));
                             txName.setPadding(10, 10, 10, 10);
-                            txName.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            //txName.setBackgroundColor(Color.parseColor("#ddffdd"));
                             txMinTemp.setText("Min Temp: " + c.getString("minTemp"));
                             txMinTemp.setPadding(10, 10, 10, 10);
-                            txMinTemp.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            //txMinTemp.setBackgroundColor(Color.parseColor("#ddffdd"));
                             txMaxTemp.setText("Max Temp: " + c.getString("maxTemp"));
                             txMaxTemp.setPadding(10, 10, 10, 10);
-                            txMaxTemp.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            //txMaxTemp.setBackgroundColor(Color.parseColor("#ddffdd"));
                             txMinLight.setText("Min Light: " + c.getString("minLight"));
                             txMinLight.setPadding(10, 10, 10, 10);
-                            txMinLight.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            //txMinLight.setBackgroundColor(Color.parseColor("#ddffdd"));
                             txMaxLight.setText("Max Light: " + c.getString("maxLight"));
                             txMaxLight.setPadding(10, 10, 10, 10);
-                            txMaxLight.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            //txMaxLight.setBackgroundColor(Color.parseColor("#ddffdd"));
                             txMinMoist.setText("Min Moist: " + c.getString("minMoist"));
                             txMinMoist.setPadding(10, 10, 10, 10);
-                            txMinMoist.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            //txMinMoist.setBackgroundColor(Color.parseColor("#ddffdd"));
                             txMaxMoist.setText("Max Moist: " + c.getString("maxMoist"));
                             txMaxMoist.setPadding(10, 10, 10, 10);
-                            txMaxMoist.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            //txMaxMoist.setBackgroundColor(Color.parseColor("#ddffdd"));
 
                             linLay.addView(txID);
                             linLay.addView(txName);
@@ -121,7 +135,7 @@ public class DisplayMessageActivity extends Activity {
                             linearLayout.addView(linLay);
                             linLay.setOrientation(LinearLayout.VERTICAL);
                             linLay.setPadding(40, 40, 40, 40);
-                            linLay.setBackgroundColor(Color.parseColor("#ddeedd"));
+                            //linLay.setBackgroundColor(Color.parseColor("#ddeedd"));
                         } catch (JSONException e) {
                             //
                         }
@@ -129,9 +143,22 @@ public class DisplayMessageActivity extends Activity {
                     }
                 }
                 if(jsonArrayGraph.length() != 0) {
-                    LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+                    int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics());
+
+                    GraphView graphTemp = new GraphView(this);
+                    graphTemp.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
+                    GraphView graphLight = new GraphView(this);
+                    graphLight.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
+                    GraphView graphMoist = new GraphView(this);
+                    graphMoist.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
+
+                    LineGraphSeries<DataPoint> seriesTemp = new LineGraphSeries<>();
+                    LineGraphSeries<DataPoint> seriesLight = new LineGraphSeries<>();
+                    LineGraphSeries<DataPoint> seriesMoist = new LineGraphSeries<>();
+
                     Calendar calendar = Calendar.getInstance();
                     Date d = calendar.getTime();
+
                     for (int i = 0; i < jsonArrayGraph.length(); i++) {
                         try {
                             JSONObject c = jsonArrayGraph.getJSONObject(i);
@@ -141,10 +168,14 @@ public class DisplayMessageActivity extends Activity {
                                 if (i == jsonArrayGraph.length() - 1) {
                                     calendar.setTime(date);
                                     d = calendar.getTime();
-                                    Toast.makeText(this, "Last Time: " + d.toString(), Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(this, "Last Time: " + d.toString(), Toast.LENGTH_LONG).show();
                                 }
-                                DataPoint dp = new DataPoint(date, c.getDouble("temp"));
-                                series.appendData(dp, true, 10);
+                                DataPoint dpTemp = new DataPoint(date.getTime(), c.getDouble("temp"));
+                                seriesTemp.appendData(dpTemp, true, 10);
+                                DataPoint dpLight = new DataPoint(date.getTime(), c.getDouble("light"));
+                                seriesLight.appendData(dpLight, true, 10);
+                                DataPoint dpMoist = new DataPoint(date, c.getDouble("moist"));
+                                seriesMoist.appendData(dpMoist, true, 10);
                             } catch (ParseException e) {
                                 // TODO Auto-generated catch block
                                 e.printStackTrace();
@@ -154,18 +185,43 @@ public class DisplayMessageActivity extends Activity {
                         }
                     }
                     //Toast.makeText(this, d.toString(), Toast.LENGTH_LONG).show();
-                    graph.addSeries(series);
-                    graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
-                    graph.getViewport().setXAxisBoundsManual(true);
+                    graphTemp.addSeries(seriesTemp);
+                    graphTemp.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
+                    graphTemp.getViewport().setXAxisBoundsManual(true);
+                    graphLight.addSeries(seriesLight);
+                    graphLight.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
+                    graphLight.getViewport().setXAxisBoundsManual(true);
+                    graphMoist.addSeries(seriesMoist);
+                    graphMoist.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
+                    graphMoist.getViewport().setXAxisBoundsManual(true);
 
                     calendar.setTime(d);
-                    calendar.add(Calendar.MINUTE, -5);
-                    graph.getViewport().setMinX(calendar.getTime().getTime());
+                    calendar.add(Calendar.MINUTE, -10);
+                    graphTemp.getViewport().setMinX(calendar.getTime().getTime());
+                    graphLight.getViewport().setMinX(calendar.getTime().getTime());
+                    graphMoist.getViewport().setMinX(calendar.getTime().getTime());
                     calendar.setTime(d);
-                    calendar.add(Calendar.MINUTE, 2);
-                    graph.getViewport().setMaxX(calendar.getTime().getTime());
-                    graph.getGridLabelRenderer().setNumHorizontalLabels(3);
-                    graph.setVerticalScrollBarEnabled(true);
+                    calendar.add(Calendar.MINUTE, 5);
+                    graphTemp.getViewport().setMaxX(calendar.getTime().getTime());
+                    graphTemp.getGridLabelRenderer().setNumHorizontalLabels(3);
+                    graphTemp.setVerticalScrollBarEnabled(true);
+                    graphLight.getViewport().setMaxX(calendar.getTime().getTime());
+                    graphLight.getGridLabelRenderer().setNumHorizontalLabels(3);
+                    graphLight.setVerticalScrollBarEnabled(true);
+                    graphMoist.getViewport().setMaxX(calendar.getTime().getTime());
+                    graphMoist.getGridLabelRenderer().setNumHorizontalLabels(3);
+                    graphMoist.setVerticalScrollBarEnabled(true);
+
+                    graphTemp.setTitle("Temperature");
+                    graphLight.setTitle("Light");
+                    graphMoist.setTitle("Moist");
+
+                    graphTemp.setPadding(0, 0, 0, 0);
+                    graphLight.setPadding(0,0,0,0);
+                    graphMoist.setPadding(0,0,0,0);
+                    linearLayout.addView(graphTemp);
+                    linearLayout.addView(graphLight);
+                    linearLayout.addView(graphMoist);
                 }
             } catch (JSONException e) {
                 //
