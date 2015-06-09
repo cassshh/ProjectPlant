@@ -2,8 +2,8 @@
 session_start();
 $user = $_SESSION['username'];
 $id = $_SESSION['user_id'];
-//$plant_id = $_SESSION['plant_id'];
-//$type_id = $_SESSION['type_id'];
+$plant_id = $_SESSION['plant_id'];
+$type_id = $_SESSION['type_id'];
 
 $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant');
 
