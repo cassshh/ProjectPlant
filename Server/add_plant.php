@@ -2,12 +2,12 @@
 session_start();
 $user = $_SESSION['username'];
 $id = $_SESSION['user_id'];
-$plant_id = $_SESSION['plant_id'];
-$type_id = $_SESSION['type_id'];
+//$plant_id = $_SESSION['plant_id'];
+//$type_id = $_SESSION['type_id'];
 
 $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant');
 
-$query2 = "SELECT name FROM type";
+$query2 = "SELECT name, type_id FROM type";
 $result2 = mysqli_query($connect, $query2);
 
 if (mysqli_num_rows($result2) < strlen($result2))
@@ -87,14 +87,18 @@ if (mysqli_num_rows($result2) < strlen($result2))
             </tr>
             <tr>
                 <td>Plant type</td>
-                <td><select>
-                <?php 
-                while ($row2 = mysqli_fetch_assoc($result2))
-                {
-                echo '<option value="' . $row2['name'] . '">' . $row2['name'] . '</option>';
-                }
-                ?>
-                    </select></td>
+                <td>
+                    <select style="width: 100%">
+                        <?php 
+                        while ($row2 = mysqli_fetch_assoc($result2))
+                        {
+                        $_SESSION['type_id'] = $row2['type_id'];
+                        $type_id = $_SESSION['type_id'];
+                        echo '<option value="' . $row2['name'] . '">' . $row2['name'] . '</option>';
+                        }
+                        ?>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td colspan='2'><input type='submit' name='submit' value='Registreer'></td>
@@ -139,9 +143,9 @@ if (!(empty($_POST['plant_name'])))
     else
     {   
         $plant = $_POST['plant_name'];
-        $plant_type = $_POST['plant_type'];
+        //$plant_type = $_POST['plant_type'];
         
-        $query = "INSERT INTO plant VALUES('$plant_id', '$plant', '$type_id', '$id')";
+        $query = "INSERT INTO plant VALUES('NULL', '$plant', '$type_id', '$id')";
         
         $result = mysqli_query($connect, $query) or die(mysqli_error($connect));
         
