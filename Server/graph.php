@@ -13,7 +13,7 @@ if(!$connect)
 }
 else
 {
-    mysql_select_db('plant_data') or die(mysql_error());
+    mysql_select_db('plant') or die(mysql_error());
 
 if(empty($begindatum && $einddatum))
 {

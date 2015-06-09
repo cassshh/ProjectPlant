@@ -7,7 +7,7 @@
         <?php
         $image = $_SESSION['image'];
         $user = $_SESSION['username'];
-        $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant_data');
+        $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant');
         if (!$connect)
         {
             DIE('could not connect: ' . mysqli_error());
