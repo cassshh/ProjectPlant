@@ -1,17 +1,15 @@
 package com.casnetwork.android;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.provider.ContactsContract;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Layout;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,12 +28,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 
 public class DisplayMessageActivity extends Activity {
 
     LinearLayout linearLayout;
     //GraphView graph;
+    boolean axisZero;
+    boolean minmax;
+    String timeSpan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,12 @@ public class DisplayMessageActivity extends Activity {
         //graph = (GraphView) findViewById(R.id.graph);
 
         new JsonData(this, "http://casnetwork.tk/plant/data.php?id=" + message).execute();
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        axisZero = pref.getBoolean("pref_start_zero", true);
+        minmax = pref.getBoolean("pref_min_max", true);
+        timeSpan =  pref.getString("pref_time_span", "1");
+
     }
 
     @Override
@@ -70,6 +78,13 @@ public class DisplayMessageActivity extends Activity {
             try {
                 Log.d("updateViewData", json.getString("Data"));
                 Log.d("updateViewGraph", json.getString("Graph"));
+
+                double tempMin = 0,
+                        tempMax = 0,
+                        lightMin = 0,
+                        lightMax = 0,
+                        moistMin = 0,
+                        moistMax = 0;
 
                 JSONArray jsonArrayData = json.getJSONArray("Data");
                 JSONArray jsonArrayType = json.getJSONArray("Type");
@@ -101,37 +116,35 @@ public class DisplayMessageActivity extends Activity {
                             JSONObject c = jsonArrayType.getJSONObject(i);
                             txID.setText("Type ID: " + c.getString("type_id"));
                             txID.setPadding(10, 10, 10, 10);
-                            //txID.setBackgroundColor(Color.parseColor("#ddffdd"));
                             txName.setText("Name: " + c.getString("name"));
                             txName.setPadding(10, 10, 10, 10);
-                            //txName.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            tempMin = c.getDouble("minTemp");
                             txMinTemp.setText("Min Temp: " + c.getString("minTemp"));
                             txMinTemp.setPadding(10, 10, 10, 10);
-                            //txMinTemp.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            tempMax = c.getDouble("maxTemp");
                             txMaxTemp.setText("Max Temp: " + c.getString("maxTemp"));
                             txMaxTemp.setPadding(10, 10, 10, 10);
-                            //txMaxTemp.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            lightMin = c.getDouble("minLight");
                             txMinLight.setText("Min Light: " + c.getString("minLight"));
                             txMinLight.setPadding(10, 10, 10, 10);
-                            //txMinLight.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            lightMax = c.getDouble("maxLight");
                             txMaxLight.setText("Max Light: " + c.getString("maxLight"));
                             txMaxLight.setPadding(10, 10, 10, 10);
-                            //txMaxLight.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            moistMin = c.getDouble("minMoist");
                             txMinMoist.setText("Min Moist: " + c.getString("minMoist"));
                             txMinMoist.setPadding(10, 10, 10, 10);
-                            //txMinMoist.setBackgroundColor(Color.parseColor("#ddffdd"));
+                            moistMax = c.getDouble("maxMoist");
                             txMaxMoist.setText("Max Moist: " + c.getString("maxMoist"));
                             txMaxMoist.setPadding(10, 10, 10, 10);
-                            //txMaxMoist.setBackgroundColor(Color.parseColor("#ddffdd"));
 
                             linLay.addView(txID);
                             linLay.addView(txName);
-                            linLay.addView(txMinTemp);
+                            /*linLay.addView(txMinTemp);
                             linLay.addView(txMaxTemp);
                             linLay.addView(txMinLight);
                             linLay.addView(txMaxLight);
                             linLay.addView(txMinMoist);
-                            linLay.addView(txMaxMoist);
+                            linLay.addView(txMaxMoist);*/
                             linearLayout.addView(linLay);
                             linLay.setOrientation(LinearLayout.VERTICAL);
                             linLay.setPadding(40, 40, 40, 40);
@@ -153,8 +166,14 @@ public class DisplayMessageActivity extends Activity {
                     graphMoist.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
 
                     LineGraphSeries<DataPoint> seriesTemp = new LineGraphSeries<>();
+                    LineGraphSeries<DataPoint> seriesTempMax = new LineGraphSeries<>();
+                    LineGraphSeries<DataPoint> seriesTempMin = new LineGraphSeries<>();
                     LineGraphSeries<DataPoint> seriesLight = new LineGraphSeries<>();
+                    LineGraphSeries<DataPoint> seriesLightMax = new LineGraphSeries<>();
+                    LineGraphSeries<DataPoint> seriesLightMin = new LineGraphSeries<>();
                     LineGraphSeries<DataPoint> seriesMoist = new LineGraphSeries<>();
+                    LineGraphSeries<DataPoint> seriesMoistMax = new LineGraphSeries<>();
+                    LineGraphSeries<DataPoint> seriesMoistMin = new LineGraphSeries<>();
 
                     Calendar calendar = Calendar.getInstance();
                     Date d = calendar.getTime();
@@ -169,19 +188,39 @@ public class DisplayMessageActivity extends Activity {
                                     calendar.setTime(date);
                                     d = calendar.getTime();
                                     //Toast.makeText(this, "Last Time: " + d.toString(), Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(this, Integer.toString(calendar.get(Calendar.HOUR_OF_DAY)), Toast.LENGTH_SHORT).show();
                                 }
                                 DataPoint dpTemp = new DataPoint(date.getTime(), c.getDouble("temp"));
-                                seriesTemp.appendData(dpTemp, true, 10);
+                                seriesTemp.appendData(dpTemp, true, jsonArrayGraph.length());
                                 DataPoint dpLight = new DataPoint(date.getTime(), c.getDouble("light"));
-                                seriesLight.appendData(dpLight, true, 10);
-                                DataPoint dpMoist = new DataPoint(date, c.getDouble("moist"));
-                                seriesMoist.appendData(dpMoist, true, 10);
+                                seriesLight.appendData(dpLight, true, jsonArrayGraph.length());
+                                DataPoint dpMoist = new DataPoint(date.getTime(), c.getDouble("moist"));
+                                seriesMoist.appendData(dpMoist, true, jsonArrayGraph.length());
+
+                                DataPoint dpTempMax = new DataPoint(date.getTime(), tempMax);
+                                seriesTempMax.appendData(dpTempMax, true, jsonArrayGraph.length());
+                                seriesTempMax.setColor(Color.RED);
+                                DataPoint dpTempMin = new DataPoint(date.getTime(), tempMin);
+                                seriesTempMin.appendData(dpTempMin, true, jsonArrayGraph.length());
+                                seriesTempMin.setColor(Color.RED);
+                                DataPoint dpLightMax = new DataPoint(date.getTime(), lightMax);
+                                seriesLightMax.appendData(dpLightMax, true, jsonArrayGraph.length());
+                                seriesLightMax.setColor(Color.RED);
+                                DataPoint dpLightMin = new DataPoint(date.getTime(), lightMin);
+                                seriesLightMin.appendData(dpLightMin, true, jsonArrayGraph.length());
+                                seriesLightMin.setColor(Color.RED);
+                                DataPoint dpMoistMax = new DataPoint(date.getTime(), moistMax);
+                                seriesMoistMax.appendData(dpMoistMax, true, jsonArrayGraph.length());
+                                seriesMoistMax.setColor(Color.RED);
+                                DataPoint dpMoistMin = new DataPoint(date.getTime(), moistMin);
+                                seriesMoistMin.appendData(dpMoistMin, true, jsonArrayGraph.length());
+                                seriesMoistMin.setColor(Color.RED);
                             } catch (ParseException e) {
                                 // TODO Auto-generated catch block
                                 e.printStackTrace();
                             }
                         } catch (JSONException e) {
-
+                            e.printStackTrace();
                         }
                     }
                     //Toast.makeText(this, d.toString(), Toast.LENGTH_LONG).show();
@@ -195,13 +234,51 @@ public class DisplayMessageActivity extends Activity {
                     graphMoist.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
                     graphMoist.getViewport().setXAxisBoundsManual(true);
 
+                    if(minmax){
+                        graphTemp.addSeries(seriesTempMax);
+                        graphTemp.addSeries(seriesTempMin);
+                        graphLight.addSeries(seriesLightMax);
+                        graphLight.addSeries(seriesLightMin);
+                        graphMoist.addSeries(seriesMoistMax);
+                        graphMoist.addSeries(seriesMoistMin);
+                    }
+
+                    if(axisZero) {
+                        graphTemp.getViewport().setYAxisBoundsManual(true);
+                        graphTemp.getViewport().setMinY(0);
+                        graphLight.getViewport().setYAxisBoundsManual(true);
+                        graphLight.getViewport().setMinY(0);
+                        graphMoist.getViewport().setYAxisBoundsManual(true);
+                        graphMoist.getViewport().setMinY(0);
+                    }
+
                     calendar.setTime(d);
-                    calendar.add(Calendar.MINUTE, -10);
+                    switch (timeSpan){
+                        case "1":
+                            calendar.add(Calendar.HOUR, -1);
+                            break;
+                        case "2":
+                            calendar.add(Calendar.DATE, -1);
+                            break;
+                        case "3":
+                            calendar.add(Calendar.DATE, -6);
+                            break;
+                    }
                     graphTemp.getViewport().setMinX(calendar.getTime().getTime());
                     graphLight.getViewport().setMinX(calendar.getTime().getTime());
                     graphMoist.getViewport().setMinX(calendar.getTime().getTime());
                     calendar.setTime(d);
-                    calendar.add(Calendar.MINUTE, 5);
+                    switch (timeSpan){
+                        case "1":
+                            calendar.add(Calendar.MINUTE, 15);
+                            break;
+                        case "2":
+                            calendar.add(Calendar.HOUR, 1);
+                            break;
+                        case "3":
+                            calendar.add(Calendar.HOUR, 3);
+                            break;
+                    }
                     graphTemp.getViewport().setMaxX(calendar.getTime().getTime());
                     graphTemp.getGridLabelRenderer().setNumHorizontalLabels(3);
                     graphTemp.setVerticalScrollBarEnabled(true);
@@ -216,34 +293,16 @@ public class DisplayMessageActivity extends Activity {
                     graphLight.setTitle("Light");
                     graphMoist.setTitle("Moist");
 
-                    graphTemp.setPadding(0, 0, 0, 0);
-                    graphLight.setPadding(0,0,0,0);
-                    graphMoist.setPadding(0,0,0,0);
                     linearLayout.addView(graphTemp);
                     linearLayout.addView(graphLight);
                     linearLayout.addView(graphMoist);
+
                 }
             } catch (JSONException e) {
                 //
             }
-        }
-/*        Calendar calendar = Calendar.getInstance();
-        Date d1 = calendar.getTime();
-        calendar.add(Calendar.DATE, 1);
-        Date d2 = calendar.getTime();
-        calendar.add(Calendar.DATE, 1);
-        Date d3 = calendar.getTime();
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(d1, 1),
-                new DataPoint(d2, 5),
-                new DataPoint(d3, 3)
-        });*/
-        /*graph.addSeries(series);
 
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
-        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
-        graph.getViewport().setMinX(d1.getTime());
-        graph.getViewport().setMaxX(d3.getTime());
-        graph.getViewport().setXAxisBoundsManual(true);*/
+        }
+
     }
 }

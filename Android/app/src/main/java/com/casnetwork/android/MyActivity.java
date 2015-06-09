@@ -1,29 +1,21 @@
 package com.casnetwork.android;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.CardView;
-import android.util.JsonReader;
 import android.util.Log;
-import android.view.DragEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,15 +24,6 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-import java.nio.charset.Charset;
 
 
 public class MyActivity extends Activity {
@@ -55,6 +38,29 @@ public class MyActivity extends Activity {
         linearLayout = (LinearLayout) findViewById(R.id.layout);
         //getActionBar().setDisplayHomeAsUpEnabled(true);
         new JsonData(this, "http://casnetwork.tk/plant/data.php").execute();
+
+        startService(new Intent(this, UpdateServiceManager.class));
+        //Log.d("Main", "OnCreate");
+
+        /*NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_action_search)
+                        .setContentTitle("My notification")
+                        .setContentText("Hello World!");
+        Intent resultIntent = new Intent(this, SettingsActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(SettingsActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(0, mBuilder.build());*/
+
     }
 
     @Override
@@ -81,10 +87,32 @@ public class MyActivity extends Activity {
                 return true;
             case R.id.action_settings:
                 //openSettings();
+                Intent i = new Intent(MyActivity.this, SettingsActivity.class);
+                startActivity(i);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void createNotification(View view) {
+        // Prepare intent which is triggered if the
+        // notification is selected
+        Intent intent = new Intent(this, MyActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        // Build notification
+        // Actions are just fake
+        Notification noti = new Notification.Builder(this)
+                .setContentTitle("Plantomatic")
+                .setContentText("Click here to read").setSmallIcon(R.drawable.ic_action_search)
+                .setContentIntent(pIntent)
+                .build();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        // hide the notification after its selected
+        noti.flags |= Notification.FLAG_AUTO_CANCEL;
+
+        notificationManager.notify(0, noti);
     }
 
     /*public void sendMessage(View view){
@@ -170,22 +198,6 @@ public class MyActivity extends Activity {
                                 new ProgressBarStatus(pbLight, minLight, maxLight, light).setProgressBar();
                                 new ProgressBarStatus(pbMoist, minMoist, maxMoist, moist).setProgressBar();
 
-
-                                /*pbTemp.setProgress(temp);
-                                if(temp <= maxTemp){
-                                    Drawable drawable = pbTemp.getProgressDrawable();
-                                    drawable.setColorFilter(new LightingColorFilter(0xFF000000, Color.parseColor("#90CAF9")));
-                                }
-                                pbLight.setProgress(light);
-                                if(light >= maxLight){
-                                    Drawable drawable = pbLight.getProgressDrawable();
-                                    drawable.setColorFilter(new LightingColorFilter(0xFF000000, 0XFFFFFF00));
-                                }
-                                pbMoist.setProgress(moist);
-                                if(moist >= maxMoist){
-                                    Drawable drawable = pbMoist.getProgressDrawable();
-                                    drawable.setColorFilter(new LightingColorFilter(0xFF000000, 0XFFFFFF00));
-                                }*/
                             } catch (JSONException e) {
                             }
                         }

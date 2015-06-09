@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.casnetwork.android" >
+    package="com.casnetwork.android">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.no" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +13,7 @@
         <!--aandroid:theme="@style/AppTheme"-->
         <activity
             android:name=".MyActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,11 +23,26 @@
         <activity
             android:name=".DisplayMessageActivity"
             android:label="@string/title_activity_display_message"
-            android:parentActivityName=".MyActivity" >
+            android:parentActivityName=".MyActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.casnetwork.android.MyActivity" />
         </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="Settings"
+            android:parentActivityName=".MyActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.casnetwork.android.MyActivity" />
+        </activity>
+
+        <!-- Serivce -->
+        <service
+            android:name=".UpdateServiceManager"
+            android:enabled="true"
+            android:label="UpdateManager"/>
+
     </application>
 
 </manifest>

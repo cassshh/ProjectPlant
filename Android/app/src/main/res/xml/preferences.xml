@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <PreferenceCategory android:title="Graphs">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="pref_start_zero"
+            android:summary="Start at zero"
+            android:title="Y Axis" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="pref_min_max"
+            android:summary="Shows red lines at Min and Max"
+            android:title="Min and Max graphs" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:dependency="pref_time_span"
+            android:dialogTitle="X Axis"
+            android:entries="@array/time"
+            android:entryValues="@array/timeVal"
+            android:key="pref_time_span"
+            android:title="Time span" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Random">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_ran"
+            android:summary="Checking meh out"
+            android:title="Random" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_notify"
+            android:summary="Receive notifications"
+            android:title="Notification" />
+
+    </PreferenceCategory>
+</PreferenceScreen>
