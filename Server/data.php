@@ -15,7 +15,7 @@ ini_set('display_errors', 1);*/
 $host = "127.0.0.1";
 $username = "plant";
 $password = (String)'$_Tan1900';
-$db_name = "plant_data";
+$db_name = "plant";
 
 try {
     $con = new PDO("mysql:host={$host};dbname={$db_name}", $username, $password);
@@ -26,11 +26,18 @@ try {
 
 if(isset($_GET['id']) && !empty($_GET['id'])){
 	$id = $_GET['id'];
-	$stmt = $con->prepare("SELECT * FROM type WHERE type_id LIKE {$id}");
+	$stmt = $con->prepare("SELECT * FROM plant WHERE plant_id = '{$id}'");
 	$stmt->execute();
-	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	// get the results in array
-	$stmt = $con->prepare("SELECT * FROM data WHERE (DATEDIFF(NOW(), dateTime) <= 1) AND plant_id = '{$id}' ORDER BY dateTime");
+	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+	$stmt = $con->prepare("SELECT * FROM type WHERE type_id = '{$results[0]['type_id']}'");
+	$stmt->execute();
+	// get the results in array
+	$type = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+	//$stmt = $con->prepare("SELECT * FROM data WHERE (DATEDIFF(NOW(), dateTime) <= 1) AND plant_id = '{$id}' ORDER BY dateTime");
+	$stmt = $con->prepare("SELECT * FROM data WHERE plant_id = '{$results[0]['plant_id']}' ORDER BY dateTime");
 	$stmt->execute();
 	// get the results in array
 	$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -40,6 +47,7 @@ if(isset($_GET['id']) && !empty($_GET['id'])){
 	}
 	// you can remove this line if you want
 	$results = array('Data' => $results);
+	$results['Type'] = $type;
 	$results['Graph'] = $data;
 
 	// now show the json tring
@@ -58,6 +66,13 @@ if(isset($_GET['id']) && !empty($_GET['id'])){
 		// get the results in array
 		$resultsType = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		$results[$i]['type'] = $resultsType;
+
+		//Latest data
+		$stmt = $con->prepare("SELECT * FROM data WHERE plant_id = '{$results[$i]['plant_id']}' ORDER BY dateTime DESC LIMIT 1");
+		$stmt->execute();
+		// get the results in array
+		$resultsType = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$results[$i]['lastData'] = $resultsType;
 	}
 
 	// you can remove this line if you want
