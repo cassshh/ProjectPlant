@@ -28,10 +28,10 @@
             dateTime,
             light,
             moist,
-            data.name
+            data.plant_id
             FROM data
             INNER JOIN plant
-            ON data.name = plant.name
+            ON data.plant_id = plant.plant_id
             WHERE plant.plant_id = '$plant_id'
             AND data.plant_id = '$plant_id'
             ";
@@ -43,10 +43,10 @@
             dateTime,
             light,
             moist,
-            data.name
+            data.plant_id
             FROM data
             INNER JOIN plant
-            ON data.name = plant.name
+            ON data.plant_id = plant.plant_id
             WHERE plant.plant_id = '$plant_id'
             AND dateTime between '$begindatum' and '$einddatum'
             ";
