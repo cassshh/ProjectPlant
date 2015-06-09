@@ -31,7 +31,7 @@ if (!(empty($_POST['username'])))
         $image = addslashes(file_get_contents($_FILES['image']['tmp_name']));
         $image_name = addslashes($_FILES['image']['name']);
         
-        $query = "INSERT INTO login VALUES('NULL', '" . $_POST['username'] . "', '" . $_POST['password'] . "', '$image', '$image_name')";
+        $query = "INSERT INTO login VALUES('NULL', '" . $_POST['username'] . "', '" . $_POST['password'] . "', '$image')";
         
         $result = mysqli_query($connect, $query) or die(mysqli_error($connect));
         mysqli_close($connect);
