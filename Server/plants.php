@@ -3,7 +3,7 @@ session_start();
 $user = $_SESSION['username'];
 if(!$_SESSION)
 {
-    header("location: http://plant.serverict.nl/homepagina.php");
+    header("location: http://casnetwork.tk/plant/homepagina.php");
 }
 else 
 {
@@ -61,7 +61,7 @@ include 'select_plant.php';
             <?php
             if($_SESSION)
             {
-                echo "<a class='test' href='http://plant.serverict.nl/logout.php' class='nav-item'>Log uit</a>"; 
+                echo "<a class='test' href='http://casnetwork.tk/plant/logout.php' class='nav-item'>Log uit</a>"; 
             }
             ?>
             </div>

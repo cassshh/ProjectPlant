@@ -42,9 +42,9 @@ else
             echo 
             "<tr>
                 <td>" . $name . "</td>
-                <td><a href=\"plantdata.php?id={$row['name']}\" class='redButton'>Temperatuur</a></td>  
-                <td><a href=\"plantdata2.php?id={$row['name']}\" class='blueButton'>Vochtigheid</a></td>  
-                <td><a href=\"plantdata3.php?id={$row['name']}\" class='orangeButton'>Licht</a></td>  
+                <td><a href=\"plantdata.php?id={$row['plant_id']}\" class='redButton'>Temperatuur</a></td>  
+                <td><a href=\"plantdata2.php?id={$row['plant_id']}\" class='blueButton'>Vochtigheid</a></td>  
+                <td><a href=\"plantdata3.php?id={$row['plant_id']}\" class='orangeButton'>Licht</a></td>  
             </tr>";
         }
     }

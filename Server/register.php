@@ -65,7 +65,6 @@ if (!(empty($_POST['username'])))
                 <div class='nav-content'>
                     <div class='nav-sub'>
                         <ul>
-                            <!--<li><a href='plantdata.php'>Planten gegevens</a></li>!-->
                             <li><a href='plants.php'>kies je plant</a></li>
                         </ul>
                     </div>
@@ -121,7 +120,7 @@ if (!(empty($_POST['username'])))
         } 
         else
         {
-            echo "<ul></br><li>Je account is aangemaakt! Klik op<a href='http://plant.serverict.nl/homepagina.php'> deze link</a> om in te loggen</li></ul>";
+            echo "<ul></br><li>Je account is aangemaakt! Klik op<a href='http://casnetwork.tk/plant/homepagina.php'> deze link</a> om in te loggen</li></ul>";
         }
     }
 }
@@ -133,7 +132,7 @@ if (!(empty($_POST['username'])))
             <?php
             if($_SESSION)
             {
-                echo "<a class='test' href='http://plant.serverict.nl/logout.php' class='nav-item'>Log uit</a>"; 
+                echo "<a class='test' href='http://casnetwork.tk/plant/logout.php' class='nav-item'>Log uit</a>"; 
             }
             ?>
             </div>

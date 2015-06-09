@@ -1,17 +1,20 @@
 <?php
 session_start();
 $user = $_SESSION['username'];
-$get = $_GET['id'];
-$_SESSION['plant_name'] = $get;
+$plant_id = $_GET['id'];
+$_SESSION['plant_id'] = $plant_id;
 
+if(isset ($_POST['submit']))
+{
+    $_SESSION['begindatum'] = $_POST['begindatum'];
+    $_SESSION['einddatum'] = $_POST['einddatum'];
+}
 if(!$_SESSION)
 {
-    header("location: http://plant.serverict.nl/homepagina.php");
+    header("location: http://casnetwork.tk/plant/homepagina.php");
 }
 else 
 {
-include 'plant.php';
-}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> 
 <html>
@@ -71,7 +74,7 @@ include 'plant.php';
             <?php
             if($_SESSION)
             {
-                echo "<a class='test' href='http://plant.serverict.nl/logout.php' class='nav-item'>Log uit</a>"; 
+                echo "<a class='test' href='http://casnetwork.tk/plant/logout.php' class='nav-item'>Log uit</a>"; 
             }
             ?>
             </div>
@@ -79,8 +82,21 @@ include 'plant.php';
     </div>
     <div class='p'>
         <p>Hieronder staat een overzicht van de lichtgegevens van <?php echo $get ?></p>
-        <img src='http://plant.serverict.nl/light.php'>
+        <img src='http://casnetwork.tk/plant/light.php'>
+        </br>
+        <form action='' method ='POST'>
+            <table>
+                <tr>
+                    <td><p>Begindatum(yyyy/mm/dd): </p><input type='text' name='begindatum'></input></td>
+                    <td><p>Einddatum(yyyy/mm/dd): </p><input type='text' name='einddatum'></input></td>
+                    <td><input type='submit' name='submit' value='Zoek gegevens'></td>
+                </tr>
+            </table>
+        </form>
     </div>
     </br>
 </body>
 </html>
+<?php
+include 'plant.php';
+}

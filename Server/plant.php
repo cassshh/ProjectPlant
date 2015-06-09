@@ -7,7 +7,11 @@
         <?php
         session_start();   
         $plant_name = $_GET['id'];
-        $_SESSION['[plant_name'] = $plant_name;
+        $plant_id = $_GET['id'];
+        
+        $plant_id = $_SESSION['plant_id'];
+        $begindatum = $_SESSION['begindatum'];
+        $einddatum = $_SESSION['einddatum']; 
         
         $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant_data');
 
@@ -16,6 +20,8 @@
             DIE('could not connect: ' . mysqli_error());
         } 
         else
+        {
+        if(empty($begindatum && $einddatum))
         {
             $query = "
             SELECT temp,
@@ -26,10 +32,25 @@
             FROM data
             INNER JOIN plant
             ON data.name = plant.name
-            WHERE plant.name = '$plant_name'
-            AND data.name = '$plant_name'
+            WHERE plant.plant_id = '$plant_id'
+            AND data.plant_id = '$plant_id'
             ";
-            
+        }
+        else if(!empty($begindatum && $einddatum))
+        {
+            $query = "
+            SELECT temp,
+            dateTime,
+            light,
+            moist,
+            data.name
+            FROM data
+            INNER JOIN plant
+            ON data.name = plant.name
+            WHERE plant.plant_id = '$plant_id'
+            AND dateTime between '$begindatum' and '$einddatum'
+            ";
+        }    
             $result = mysqli_query($connect, $query);
             
             $rows = mysqli_num_rows($result);

@@ -2,7 +2,9 @@
 session_start();
 include("graphs/phpgraphlib.php");
 
-$plant_name = $_SESSION['plant_name'];
+$plant_id = $_SESSION['plant_id'];
+$begindatum = $_SESSION['begindatum'];
+$einddatum = $_SESSION['einddatum'];
 
 $connect = mysql_connect('localhost', 'plant', '$_Tan1900');
 if(!$connect)
@@ -12,7 +14,9 @@ if(!$connect)
 else
 {
     mysql_select_db('plant_data') or die(mysql_error());
-    
+
+    if(empty($begindatum && $einddatum))
+    {
     $query = "
             SELECT temp,
             dateTime,
@@ -22,9 +26,24 @@ else
             FROM data
             INNER JOIN plant
             ON plant.name = data.name
-            WHERE plant.name = '$plant_name'
+            WHERE plant.plant_id = '$plant_id'
             ";
-    
+    }
+    else if(!empty($begindatum && $einddatum))
+    {
+         $query = "
+            SELECT temp,
+            dateTime,
+            light,
+            moist,
+            data.name
+            FROM data
+            INNER JOIN plant
+            ON plant.name = data.name
+            WHERE plant.plant_id = '$plant_id'
+            AND dateTime between '$begindatum' and '$einddatum'
+            ";
+    }
     $array = array();
     $result = mysql_query($query) or die(mysql_error());
     if ($result) 
@@ -41,7 +60,7 @@ $graph->addData($array);
 $graph->setTitle("plant licht niveau/tijd");
 $graph->setGradient("lime", "green");
 $graph->setBarOutlineColor("black");
-$graph->setLineColor("red");
+$graph->setLineColor("#ffa500");
 $graph->setbars(false);
 $graph->setLine(true);
 $graph->createGraph();

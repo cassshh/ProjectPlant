@@ -107,7 +107,7 @@ if (mysqli_num_rows($result2) < strlen($result2))
             <?php
             if($_SESSION)
             {
-                echo "<a class='test' href='http://plant.serverict.nl/logout.php' class='nav-item'>Log uit</a>"; 
+                echo "<a class='test' href='http://casnetwork.tk/plant/logout.php' class='nav-item'>Log uit</a>"; 
             }
             ?>
             </div>
@@ -134,7 +134,7 @@ if (!(empty($_POST['plant_name'])))
     if (mysqli_num_rows($result) > 0)
     {
         echo 'Deze plantnaam bestaat al :(' . '</br>
-              Klik op <a href="http://plant.serverict.nl/registeredplants.php"> deze link</a> om alle geregistreerde plantnamen te bekijken';
+              Klik op <a href="http://casnetwork.tk/plant/registeredplants.php"> deze link</a> om alle geregistreerde plantnamen te bekijken';
     } 
     else
     {   

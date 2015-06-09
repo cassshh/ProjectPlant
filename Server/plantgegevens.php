@@ -16,6 +16,7 @@
         {
             $query = "
                     SELECT login.username,
+                    login.image,
                     plant.name,
                     type.name
                     FROM plant
@@ -47,9 +48,9 @@
                 $_SESSION['data_name'] = $row['name'];
                 echo 
                 '<tr>
-                    <td>' . $user . '</br><img id="image" src="data:image/jpeg;base64,' . base64_encode($image) . '"/></td>
-                    <td>' . $row[1] . '</td>
+                    <td>' . $row['username'] . '</br><img id="image" src="data:image/jpeg;base64,' . base64_encode($row['image']) . '"/></td>
                     <td>' . $row[2] . '</td>
+                    <td>' . $row['name'] . '</td>
                 </tr>'
                 ;
             }
