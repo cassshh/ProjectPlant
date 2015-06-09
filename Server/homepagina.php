@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         } 
         else
         {
-            $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant_data');
+            $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant');
             $query = "
                     SELECT * 
                     FROM login 
