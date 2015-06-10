@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="50dp"
+    android:id="@+id/outer_linear">
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_margin="10dp"
+        card_view:cardCornerRadius="0dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/inner_linear"
+            android:layout_margin="10dp"
+            >
+            <!--<TextView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:text="Mah nig" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:text="Wazzap g" />-->
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>
+<!-- From: file:/D:/GitHub/ProjectPlant/Android/Android/app/src/main/res/layout/card_view.xml -->
