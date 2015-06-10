@@ -27,6 +27,7 @@ if(empty($begindatum && $einddatum))
             INNER JOIN plant
             ON plant.plant_id = data.plant_id
             WHERE plant.plant_id = '$plant_id'
+            ORDER BY dateTime DESC
             LIMIT 0, 24
             ";
 }
@@ -43,6 +44,7 @@ else if(!empty($begindatum && $einddatum))
             ON plant.plant_id = data.plant_id
             WHERE plant.plant_id = '$plant_id'
             AND dateTime between '$begindatum' and '$einddatum'
+            ORDER BY dateTime DESC
             ";
 }   
     $array = array();

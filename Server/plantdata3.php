@@ -87,8 +87,8 @@ else
         <form action='' method ='POST'>
             <table>
                 <tr>
-                    <td><p>Begindatum(yyyy/mm/dd): </p><input type='text' name='begindatum'></input></td>
-                    <td><p>Einddatum(yyyy/mm/dd): </p><input type='text' name='einddatum'></input></td>
+                    <td><p>Begindatum(yyyy-mm-dd): </p><input type='text' name='begindatum'></input></td>
+                    <td><p>Einddatum(yyyy-mm-dd): </p><input type='text' name='einddatum'></input></td>
                     <td><input type='submit' name='submit' value='Zoek gegevens'></td>
                 </tr>
             </table>

@@ -231,14 +231,14 @@ table, th, td {
     text-decoration: none;
 }
 .nav-item:hover {
-    background-color: #444;
+    background-color: #1565c0;
 }
 
 .nav-content {
     position: absolute;
     top: 70px;
     overflow: hidden;
-    background-color: #222;
+    background-color: #1565c0;
     color: #fff;
     max-height: 0;
 }
@@ -272,7 +272,7 @@ table, th, td {
 }
 
 .nav-item:focus {
-    background-color: #444
+    background-color: #1565c0
 }
 
 .nav-item:focus ~ .nav-content {
