@@ -2,7 +2,7 @@
 #define __CREDENTIALS_H__
 
 // Wifi parameters
-// Use the open Stenden network
+// Gebruik het open Stenden netwerk
 char passphrase[] = "";
 char ssid[] = "Stenden";
 
