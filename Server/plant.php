@@ -34,6 +34,7 @@
             ON data.plant_id = plant.plant_id
             WHERE plant.plant_id = '$plant_id'
             AND data.plant_id = '$plant_id'
+            ORDER BY dateTime DESC;
             ";
         }
         else if(!empty($begindatum && $einddatum))

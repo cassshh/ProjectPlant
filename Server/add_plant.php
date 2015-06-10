@@ -3,7 +3,6 @@ session_start();
 $user = $_SESSION['username'];
 $id = $_SESSION['user_id'];
 $plant_id = $_SESSION['plant_id'];
-$type_id = $_SESSION['type_id'];
 
 $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant');
 
@@ -88,13 +87,11 @@ if (mysqli_num_rows($result2) < strlen($result2))
             <tr>
                 <td>Plant type</td>
                 <td>
-                    <select style="width: 100%">
+                    <select name="option_value" style="width: 100%">
                         <?php 
                         while ($row2 = mysqli_fetch_assoc($result2))
                         {
-                        $_SESSION['type_id'] = $row2['type_id'];
-                        $type_id = $_SESSION['type_id'];
-                        echo '<option value="' . $row2['name'] . '">' . $row2['name'] . '</option>';
+                        echo '<option value="' . $row2['type_id'] . '">' . $row2['name'] . '</option>';
                         }
                         ?>
                     </select>
@@ -127,7 +124,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 if (isset($_POST['submit']))
 {
-$errors = [];
+    $type_id = $_POST['option_value'];
+    $errors = [];
 
 if (!(empty($_POST['plant_name'])))
 {   
@@ -141,9 +139,8 @@ if (!(empty($_POST['plant_name'])))
               Klik op <a href="http://casnetwork.tk/plant/registeredplants.php"> deze link</a> om alle geregistreerde plantnamen te bekijken';
     } 
     else
-    {   
+    {
         $plant = $_POST['plant_name'];
-        //$plant_type = $_POST['plant_type'];
         
         $query = "INSERT INTO plant VALUES('NULL', '$plant', '$type_id', '$id')";
         
