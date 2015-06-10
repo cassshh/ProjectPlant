@@ -1,13 +1,18 @@
 <?php
+//start een sessie
 session_start();
+
+//zet een aantal sessie variabelen
 $user = $_SESSION['username'];
 $plant_id = $_SESSION['plant_id'];
 $plant_name = $_SESSION['name'];
 
+//als er geen session is gezet wordt je doorverwezen naar de homepagina
 if(!$_SESSION)
 {
     header("location: http://casnetwork.tk/plant/homepagina.php");
 }
+//is er wel een sessie gestart, run dan de onderstaande code
 else
 {
 ?>
@@ -38,7 +43,7 @@ else
                 <div class='nav-content'>
                     <div class='nav-sub'>
                         <ul>
-                            <li><a href='plants.php'>kies je plant</a></li>
+                            <li><a href='plants.php'>Kies je plant</a></li>
                         </ul>
                     </div>
                 </div>
@@ -46,6 +51,7 @@ else
             <li>
         </ul>
         <?php
+        //als er geen sessie is gestart, toon dan de onderstaande link in de header
         if(!$_SESSION)
         {
         ?>
@@ -55,6 +61,7 @@ else
         }
         else
         {
+        //is er wel een sessie gezet, echo dan de onderstaande regel
         ?>
             <div class='title'><p>Ingelogd als <?php echo $user?></p>
         </div>
@@ -67,6 +74,7 @@ else
             <div id="footerlinks">&copy; 2015</div>
             <div id="footerrechts">
             <?php
+            //als er een sessie is gestart, toon de log uit knop
             if($_SESSION)
             {
                 echo "<a class='test' href='http://casnetwork.tk/plant/logout.php' class='nav-item'>Log uit</a>"; 
@@ -80,6 +88,7 @@ else
 </body>
 </html>
 <?php
+//include plantgegevens.php..
 include 'plantgegevens.php';
 }
 ?>

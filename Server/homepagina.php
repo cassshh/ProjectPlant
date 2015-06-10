@@ -2,7 +2,7 @@
 //start een sessie
 session_start();
 
-//definieer sessie variabelen
+//zet sessie variabelen
 $user = $_SESSION['username'];
 $image = $_SESSION['image'];
 ?>

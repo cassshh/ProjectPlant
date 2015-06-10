@@ -1,17 +1,27 @@
 <?php
+//start een sessie
 session_start();
+
+//zet sessie variabelen
 $user = $_SESSION['username'];
 $plant_id = $_GET['id'];
 $_SESSION['plant_id'] = $plant_id;
+
+//als er op de submit knop is geklikt
 if(isset ($_POST['submit']))
 {
+    //zet nog twee sessie variabelen
     $_SESSION['begindatum'] = $_POST['begindatum'];
     $_SESSION['einddatum'] = $_POST['einddatum'];
 }
+
+//als er geen sessie is gestart, ga terug naar de homepagina
 if(!$_SESSION)
 {
     header("location: http://casnetwork.tk/plant/homepagina.php");
 }
+
+//is er wel een sessie gestart, run dan de onderstaande code
 else 
 {
 ?>
@@ -50,6 +60,7 @@ else
             <li>
         </ul>
         <?php
+        //als er geen sessie is gestart, toon dan de onderstaande link in de header
         if(!$_SESSION)
         {
         ?>
@@ -57,6 +68,7 @@ else
         </div>
         <?php
         }
+        //is er wel een sessie gezet, echo dan de onderstaande regel
         else
         {
         ?>
@@ -71,6 +83,7 @@ else
             <div id="footerlinks">&copy; 2015</div>
             <div id="footerrechts">
             <?php
+            //als er een session is gestart, toon de log uit knop
             if($_SESSION)
             {
                 echo "<a class='test' href='http://casnetwork.tk/plant/logout.php' class='nav-item'>Log uit</a>"; 
@@ -81,8 +94,12 @@ else
     </div>
     <div class='p'>
         <p>Hieronder staat een overzicht van de temperatuurgegevens van <?php echo $get ?></p>
+        
+        <!-- voeg de grafiek toe uit het bestand light.php !-->
         <img src='http://casnetwork.tk/plant/graph.php'>
         </br>
+        
+        <!-- een formulier met 2 inputvelden om plantgegevens van de opgegeven datums te tonen!-->
         <form action='' method ='POST'>
             <table>
                 <tr>

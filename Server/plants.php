@@ -1,10 +1,17 @@
 <?php
+//start een sessie
 session_start();
+
+//maak een sessie variable aan
 $user = $_SESSION['username'];
+
+//als er geen sessie is gestart, ga terug naar de homepagina
 if(!$_SESSION)
 {
     header("location: http://casnetwork.tk/plant/homepagina.php");
 }
+
+//is er wel een sessie gestart, include dan select_plant.php
 else 
 {
 include 'select_plant.php';
@@ -38,6 +45,7 @@ include 'select_plant.php';
             <li>
         </ul>
         <?php
+        //als er geen sessie is gestart, toon dan de onderstaande link in de header
         if(!$_SESSION)
         {
         ?>
@@ -45,6 +53,7 @@ include 'select_plant.php';
         </div>
         <?php
         }
+        //als er wel een sessie is gestart, toon dan de onderstaande tekst in de header
         else
         {
         ?>
@@ -59,6 +68,7 @@ include 'select_plant.php';
             <div id="footerlinks">&copy; 2015</div>
             <div id="footerrechts">
             <?php
+            //als er een sessie is gestart, toon de log uit knop
             if($_SESSION)
             {
                 echo "<a class='test' href='http://casnetwork.tk/plant/logout.php' class='nav-item'>Log uit</a>"; 

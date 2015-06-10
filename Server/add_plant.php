@@ -1,14 +1,22 @@
 <?php
+//start een sessie
 session_start();
+
+//zet sessie variabelen
 $user = $_SESSION['username'];
 $id = $_SESSION['user_id'];
 $plant_id = $_SESSION['plant_id'];
 
+//connect met de server/database
 $connect = mysqli_connect('localhost', 'plant', '$_Tan1900', 'plant');
 
+//query om aantal gegevens uit de type tabel te halen
 $query2 = "SELECT name, type_id FROM type";
+
+//run de query
 $result2 = mysqli_query($connect, $query2);
 
+//als er minder rijen worden teruggegeven dan de lengte, geef dan een foutmelding
 if (mysqli_num_rows($result2) < strlen($result2))
 {
     echo 'Er ging iets mis met het ophalen van de planttypes';
@@ -46,6 +54,7 @@ if (mysqli_num_rows($result2) < strlen($result2))
                 </div>
             </li>
             <?php
+            //als er geen sessie is gestart, toon dan de onderstaande link in de header
             if(!$_SESSION)
             {
             ?>
@@ -58,6 +67,7 @@ if (mysqli_num_rows($result2) < strlen($result2))
             <li>
         </ul>
         <?php
+        //als er geen sessie is gestart, toon dan de deze tekst
         if(!$_SESSION)
         {
         ?>
@@ -65,6 +75,7 @@ if (mysqli_num_rows($result2) < strlen($result2))
         </div>
         <?php
         }
+        //als er wel een sessie is gestart, toon dan de onderstaande tekst in de header
         else
         {
         ?>
@@ -87,6 +98,8 @@ if (mysqli_num_rows($result2) < strlen($result2))
             <tr>
                 <td>Plant type</td>
                 <td>
+                    
+                    <!-- dropdown menu met daarin de plant types!-->
                     <select name="option_value" style="width: 100%">
                         <?php 
                         while ($row2 = mysqli_fetch_assoc($result2))
@@ -106,6 +119,7 @@ if (mysqli_num_rows($result2) < strlen($result2))
             <div id="footerlinks">&copy; 2015</div>
             <div id="footerrechts">
             <?php
+            //als er een session is gestart, toon de log uit knop
             if($_SESSION)
             {
                 echo "<a class='test' href='http://casnetwork.tk/plant/logout.php' class='nav-item'>Log uit</a>"; 
@@ -119,40 +133,36 @@ if (mysqli_num_rows($result2) < strlen($result2))
 </body>
 </html>
 <?php
-//if submit is pressed
+//als er een POST REQUEST wordt gedaan
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
+    
+//als er op de submit knop wordt geklikt    
 if (isset($_POST['submit']))
 {
+    //zet sessie variabele en maak een $errors array aan
     $type_id = $_POST['option_value'];
     $errors = [];
 
-if (!(empty($_POST['plant_name'])))
-{   
-    $query = "SELECT * FROM plant WHERE name='" . mysqli_real_escape_string($connect, $_POST['plant_name']) . "'";
-    
-    $result = mysqli_query($connect, $query);
-    
-    if (mysqli_num_rows($result) > 0)
-    {
-        echo 'Deze plantnaam bestaat al :(' . '</br>
-              Klik op <a href="http://casnetwork.tk/plant/registeredplants.php"> deze link</a> om alle geregistreerde plantnamen te bekijken';
-    } 
-    else
-    {
+    //als plant_name niet leeg is, run de onderstaande code
+    if (!(empty($_POST['plant_name'])))
+    {   
+        //zet een sessie variabele
         $plant = $_POST['plant_name'];
-        
+
+        //query om de gegevens aan de database toe te voegen
         $query = "INSERT INTO plant VALUES('NULL', '$plant', '$type_id', '$id')";
-        
+
+        //run de query
         $result = mysqli_query($connect, $query) or die(mysqli_error($connect));
-        
+
+        //sluit de connectie met de database
         mysqli_close($connect);
-        
+
         if($query)
         {
             echo 'Je plant is toegevoegd aan de database!';
         }
+        }
     }
-}
-}
 }
