@@ -127,7 +127,7 @@ if (mysqli_num_rows($result2) < strlen($result2)) {
             <div id="footerrechts">
 
                 <?php
-//Als er een session is gestart, toon de log uit knop
+// Als er een session is gestart, toon de log uit knop
                 if ($_SESSION) {
                     echo "<a class='test' href='http://casnetwork.tk/plant/logout.php' class='nav-item'>Log uit</a>";
                 }
@@ -141,27 +141,27 @@ if (mysqli_num_rows($result2) < strlen($result2)) {
 </body>
 </html>
 <?php
-//als er een POST REQUEST wordt gedaan
+// Als er een POST REQUEST wordt gedaan
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-//als er op de submit knop wordt geklikt    
+// Als er op de submit knop wordt geklikt    
     if (isset($_POST['submit'])) {
-        //zet sessie variabele en maak een $errors array aan
+        // Zet sessie variabele en maak een $errors array aan
         $type_id = $_POST['option_value'];
         $errors = [];
 
-        //als plant_name niet leeg is, run de onderstaande code
+        // Als plant_name niet leeg is, run de onderstaande code
         if (!(empty($_POST['plant_name']))) {
-            //zet een sessie variabele
+            // Zet een sessie variabele
             $plant = $_POST['plant_name'];
 
-            //query om de gegevens aan de database toe te voegen
+            // Query om de gegevens aan de database toe te voegen
             $query = "INSERT INTO plant VALUES('NULL', '$plant', '$type_id', '$id')";
 
-            //run de query
+            // Run de query
             $result = mysqli_query($connect, $query) or die(mysqli_error($connect));
 
-            //sluit de connectie met de database
+            // Sluit de connectie met de database
             mysqli_close($connect);
 
             if ($query) {

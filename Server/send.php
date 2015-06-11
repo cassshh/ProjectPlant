@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 $plantNaam = 'Jaapie';
 $_SESSION['plantNaam'] = $plantNaam;
@@ -18,6 +19,7 @@ $_SESSION['plantLichtNiveau'] = $plantLichtNiveau;
 $meetTijd = '2015-05-20 11:04:23';
 $_SESSION['meetTijd'] = $meetTijd;
 ?>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> 
 <html>
     <head>

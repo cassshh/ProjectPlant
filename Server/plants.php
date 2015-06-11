@@ -1,20 +1,19 @@
 <?php
-//start een sessie
+
+// Start een sessie
 session_start();
 
-//maak een sessie variable aan
+// Maak een sessie variable aan
 $user = $_SESSION['username'];
 
-//als er geen sessie is gestart, ga terug naar de homepagina
-if(!$_SESSION)
-{
+// Als er geen sessie is gestart, ga terug naar de homepagina
+if (!$_SESSION) {
     header("location: http://casnetwork.tk/plant/homepagina.php");
 }
 
-//is er wel een sessie gestart, include dan select_plant.php
-else 
-{
-include 'select_plant.php';
+// Is er wel een sessie gestart, include dan select_plant.php
+else {
+    include 'select_plant.php';
 }
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> 
@@ -45,21 +44,19 @@ include 'select_plant.php';
             <li>
         </ul>
         <?php
-        //als er geen sessie is gestart, toon dan de onderstaande link in de header
-        if(!$_SESSION)
-        {
-        ?>
-        <div class='title'><p>Project Plant</p>
-        </div>
-        <?php
+        // Als er geen sessie is gestart, toon dan de onderstaande link in de header
+        if (!$_SESSION) {
+            ?>
+            <div class='title'><p>Project Plant</p>
+            </div>
+            <?php
         }
-        //als er wel een sessie is gestart, toon dan de onderstaande tekst in de header
-        else
-        {
-        ?>
-            <div class='title'><p>Ingelogd als <?php echo $user?></p>
-        </div>
-        <?php
+        // Als er wel een sessie is gestart, toon dan de onderstaande tekst in de header
+        else {
+            ?>
+            <div class='title'><p>Ingelogd als <?php echo $user ?></p>
+            </div>
+            <?php
         }
         ?>
     </nav>	
@@ -67,13 +64,12 @@ include 'select_plant.php';
         <div class="footer">
             <div id="footerlinks">&copy; 2015</div>
             <div id="footerrechts">
-            <?php
-            //als er een sessie is gestart, toon de log uit knop
-            if($_SESSION)
-            {
-                echo "<a class='test' href='http://casnetwork.tk/plant/logout.php' class='nav-item'>Log uit</a>"; 
-            }
-            ?>
+                <?php
+                // Als er een sessie is gestart, toon de log uit knop
+                if ($_SESSION) {
+                    echo "<a class='test' href='http://casnetwork.tk/plant/logout.php' class='nav-item'>Log uit</a>";
+                }
+                ?>
             </div>
         </div>
     </div>

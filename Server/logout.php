@@ -1,9 +1,11 @@
 <?php
-//start een sessie
+
+// Start een sessie
 session_start();
 
-//sluit de sessie
+// Sluit de sessie
 session_destroy();
 
-//ga terug naar de homepagina
-header ("location: homepagina.php");
+// Ga terug naar de homepagina
+header("location: homepagina.php");
+
