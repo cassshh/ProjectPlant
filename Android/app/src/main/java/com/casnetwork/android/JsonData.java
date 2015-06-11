@@ -25,7 +25,8 @@ public class JsonData extends AsyncTask<String, Void, JSONObject> {
     private JSONObject json;
     MyActivity caller = null;
     DisplayMessageActivity callerDis = null;
-    ProgressDialog pDialog;
+    UpdateServiceManager.TimeDisplayTimerTask callerUpdate = null;
+    ProgressDialog pDialog = null;
 
     public JsonData(MyActivity caller, String url) {
         this.caller = caller;
@@ -36,6 +37,10 @@ public class JsonData extends AsyncTask<String, Void, JSONObject> {
         this.callerDis = caller;
         this.url = url;
     }
+    public JsonData(UpdateServiceManager.TimeDisplayTimerTask caller, String url) {
+        this.callerUpdate = caller;
+        this.url = url;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -43,12 +48,15 @@ public class JsonData extends AsyncTask<String, Void, JSONObject> {
         // Showing progress dialog
         if (caller != null) {
             pDialog = new ProgressDialog(caller);
-        } else {
+            pDialog.setMessage("Please wait...");
+            pDialog.setCancelable(true);
+            pDialog.show();
+        } else if(callerDis != null){
             pDialog = new ProgressDialog(callerDis);
+            pDialog.setMessage("Please wait...");
+            pDialog.setCancelable(true);
+            pDialog.show();
         }
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
-        pDialog.show();
 
     }
 
@@ -88,6 +96,7 @@ public class JsonData extends AsyncTask<String, Void, JSONObject> {
     protected void onPostExecute(JSONObject json) {
         if (caller != null) caller.updateView(json);
         if (callerDis != null) callerDis.updateView(json);
-        if (pDialog.isShowing())pDialog.dismiss();
+        if (callerUpdate != null) callerUpdate.updateView(json);
+        if (pDialog != null) if (pDialog.isShowing()) pDialog.dismiss();
     }
 }

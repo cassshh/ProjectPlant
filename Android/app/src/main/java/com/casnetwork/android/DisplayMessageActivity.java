@@ -41,6 +41,11 @@ public class DisplayMessageActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        axisZero = pref.getBoolean("pref_start_zero", true);
+        minmax = pref.getBoolean("pref_min_max", true);
+        timeSpan =  pref.getString("pref_time_span", "1");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_message);
         Intent intent = getIntent();
@@ -51,10 +56,7 @@ public class DisplayMessageActivity extends Activity {
 
         new JsonData(this, "http://casnetwork.tk/plant/data.php?id=" + message).execute();
 
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        axisZero = pref.getBoolean("pref_start_zero", true);
-        minmax = pref.getBoolean("pref_min_max", true);
-        timeSpan =  pref.getString("pref_time_span", "1");
+
 
     }
 
