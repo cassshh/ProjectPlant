@@ -32,7 +32,6 @@ public class JsonData extends AsyncTask<String, Void, JSONObject> {
         this.caller = caller;
         this.url = url;
     }
-
     public JsonData(DisplayMessageActivity caller, String url) {
         this.callerDis = caller;
         this.url = url;
@@ -63,7 +62,6 @@ public class JsonData extends AsyncTask<String, Void, JSONObject> {
     protected JSONObject doInBackground(String... urls) {
         try {
             json = readJsonFromUrl(url);
-            //Log.d("JSON",json.getString("id"));
             return json;
         } catch (IOException e) {
             return null;
@@ -93,7 +91,7 @@ public class JsonData extends AsyncTask<String, Void, JSONObject> {
         }
     }
 
-    protected void onPostExecute(JSONObject json) {
+    protected void onPostExecute(JSONObject json) { //invoke updateView method
         if (caller != null) caller.updateView(json);
         if (callerDis != null) callerDis.updateView(json);
         if (callerUpdate != null) callerUpdate.updateView(json);

@@ -34,14 +34,13 @@ import java.util.Locale;
 public class DisplayMessageActivity extends Activity {
 
     LinearLayout linearLayout;
-    //GraphView graph;
     boolean axisZero;
     boolean minmax;
     String timeSpan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext()); //get preferences Settings
         axisZero = pref.getBoolean("pref_start_zero", true);
         minmax = pref.getBoolean("pref_min_max", true);
         timeSpan =  pref.getString("pref_time_span", "1");
@@ -49,15 +48,11 @@ public class DisplayMessageActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_message);
         Intent intent = getIntent();
-        String message = intent.getStringExtra(MyActivity.EXTRA_MESSAGE);
+        String message = intent.getStringExtra(MyActivity.EXTRA_MESSAGE); // get message that was put
 
         linearLayout = (LinearLayout) findViewById(R.id.layout);
-        //graph = (GraphView) findViewById(R.id.graph);
 
-        new JsonData(this, "http://casnetwork.tk/plant/data.php?id=" + message).execute();
-
-
-
+        new JsonData(this, "http://casnetwork.tk/plant/data.php?id=" + message).execute(); //Get json data
     }
 
     @Override
@@ -78,9 +73,6 @@ public class DisplayMessageActivity extends Activity {
     public void updateView(JSONObject json) {
         if(json != null) {
             try {
-                Log.d("updateViewData", json.getString("Data"));
-                Log.d("updateViewGraph", json.getString("Graph"));
-
                 double tempMin = 0,
                         tempMax = 0,
                         lightMin = 0,
@@ -93,18 +85,19 @@ public class DisplayMessageActivity extends Activity {
                 JSONArray jsonArrayGraph = json.getJSONArray("Graph");
                 //Loop through Data array
                 if(jsonArrayData.length() != 0) {
-                    for (int i = 0; i < jsonArrayData.length(); i++) {
+                    for (int i = 0; i < jsonArrayData.length(); i++) { //loop through 'data'
                         //code
                         try {
                             JSONObject c = jsonArrayData.getJSONObject(i);
-                            getActionBar().setTitle(c.getString("name") + " Data");
+                            getActionBar().setTitle(c.getString("name") + " Data"); //Change title per plant
                         }catch (JSONException e){
                             //code
                         }
                     }
                 }
                 if(jsonArrayType.length() != 0) {
-                    for (int i = 0; i < jsonArrayType.length(); i++) {
+                    for (int i = 0; i < jsonArrayType.length(); i++) { //loop through 'type'
+                        //Create textViews
                         LinearLayout linLay = new LinearLayout(this);
                         TextView txID = new TextView(this);
                         TextView txName = new TextView(this);
@@ -115,6 +108,7 @@ public class DisplayMessageActivity extends Activity {
                         TextView txMinMoist = new TextView(this);
                         TextView txMaxMoist = new TextView(this);
                         try {
+                            //Set text
                             JSONObject c = jsonArrayType.getJSONObject(i);
                             txID.setText("Type ID: " + c.getString("type_id"));
                             txID.setPadding(10, 10, 10, 10);
@@ -139,6 +133,7 @@ public class DisplayMessageActivity extends Activity {
                             txMaxMoist.setText("Max Moist: " + c.getString("maxMoist"));
                             txMaxMoist.setPadding(10, 10, 10, 10);
 
+                            //Add the textviews to the layout
                             linLay.addView(txID);
                             linLay.addView(txName);
                             /*linLay.addView(txMinTemp);
@@ -152,14 +147,13 @@ public class DisplayMessageActivity extends Activity {
                             linLay.setPadding(40, 40, 40, 40);
                             //linLay.setBackgroundColor(Color.parseColor("#ddeedd"));
                         } catch (JSONException e) {
-                            //
+                            e.printStackTrace();
                         }
-
                     }
                 }
-                if(jsonArrayGraph.length() != 0) {
+                if(jsonArrayGraph.length() != 0) { //loop through 'graph'
                     int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics());
-
+                    //Create graphs
                     GraphView graphTemp = new GraphView(this);
                     graphTemp.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
                     GraphView graphLight = new GraphView(this);
@@ -167,6 +161,7 @@ public class DisplayMessageActivity extends Activity {
                     GraphView graphMoist = new GraphView(this);
                     graphMoist.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
 
+                    //Create series (lines on the graphs)
                     LineGraphSeries<DataPoint> seriesTemp = new LineGraphSeries<>();
                     LineGraphSeries<DataPoint> seriesTempMax = new LineGraphSeries<>();
                     LineGraphSeries<DataPoint> seriesTempMin = new LineGraphSeries<>();
@@ -192,6 +187,7 @@ public class DisplayMessageActivity extends Activity {
                                     //Toast.makeText(this, "Last Time: " + d.toString(), Toast.LENGTH_LONG).show();
                                     //Toast.makeText(this, Integer.toString(calendar.get(Calendar.HOUR_OF_DAY)), Toast.LENGTH_SHORT).show();
                                 }
+                                //Set datapoints
                                 DataPoint dpTemp = new DataPoint(date.getTime(), c.getDouble("temp"));
                                 seriesTemp.appendData(dpTemp, true, jsonArrayGraph.length());
                                 DataPoint dpLight = new DataPoint(date.getTime(), c.getDouble("light"));
@@ -218,7 +214,6 @@ public class DisplayMessageActivity extends Activity {
                                 seriesMoistMin.appendData(dpMoistMin, true, jsonArrayGraph.length());
                                 seriesMoistMin.setColor(Color.RED);
                             } catch (ParseException e) {
-                                // TODO Auto-generated catch block
                                 e.printStackTrace();
                             }
                         } catch (JSONException e) {
@@ -226,6 +221,7 @@ public class DisplayMessageActivity extends Activity {
                         }
                     }
                     //Toast.makeText(this, d.toString(), Toast.LENGTH_LONG).show();
+                    //Add series
                     graphTemp.addSeries(seriesTemp);
                     graphTemp.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
                     graphTemp.getViewport().setXAxisBoundsManual(true);
@@ -236,6 +232,7 @@ public class DisplayMessageActivity extends Activity {
                     graphMoist.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
                     graphMoist.getViewport().setXAxisBoundsManual(true);
 
+                    //preference show min & max lines
                     if(minmax){
                         graphTemp.addSeries(seriesTempMax);
                         graphTemp.addSeries(seriesTempMin);
@@ -245,6 +242,7 @@ public class DisplayMessageActivity extends Activity {
                         graphMoist.addSeries(seriesMoistMin);
                     }
 
+                    //preference start at 0, y axis
                     if(axisZero) {
                         graphTemp.getViewport().setYAxisBoundsManual(true);
                         graphTemp.getViewport().setMinY(0);
@@ -254,6 +252,7 @@ public class DisplayMessageActivity extends Activity {
                         graphMoist.getViewport().setMinY(0);
                     }
 
+                    //preference timespan
                     calendar.setTime(d);
                     switch (timeSpan){
                         case "1":
@@ -291,20 +290,20 @@ public class DisplayMessageActivity extends Activity {
                     graphMoist.getGridLabelRenderer().setNumHorizontalLabels(3);
                     graphMoist.setVerticalScrollBarEnabled(true);
 
+                    //Add titles
                     graphTemp.setTitle("Temperature");
                     graphLight.setTitle("Light");
                     graphMoist.setTitle("Moist");
 
+                    //Add graphs
                     linearLayout.addView(graphTemp);
                     linearLayout.addView(graphLight);
                     linearLayout.addView(graphMoist);
 
                 }
             } catch (JSONException e) {
-                //
+               e.printStackTrace();
             }
-
         }
-
     }
 }

@@ -32,7 +32,7 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="pref_notify"
-            android:summary="Receive notifications"
+            android:summary="Receive notifications \nLeave empty for no message"
             android:title="Notification" />
 
         <EditTextPreference

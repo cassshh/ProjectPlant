@@ -39,9 +39,9 @@ public class MyActivity extends Activity {
         setContentView(R.layout.activity_my);
         linearLayout = (LinearLayout) findViewById(R.id.layout);
         //getActionBar().setDisplayHomeAsUpEnabled(true);
-        new JsonData(this, "http://casnetwork.tk/plant/data.php").execute();
+        new JsonData(this, "http://casnetwork.tk/plant/data.php").execute(); //Execute retreiving data
 
-        startService(new Intent(this, UpdateServiceManager.class));
+        startService(new Intent(this, UpdateServiceManager.class)); //Start notification service
     }
 
     @Override
@@ -62,12 +62,10 @@ public class MyActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
-            case R.id.action_search:
-                //openSearch();
+            case R.id.action_refresh: //Update data
                 new JsonData(this, "http://casnetwork.tk/plant/data.php").execute();
                 return true;
-            case R.id.action_settings:
-                //openSettings();
+            case R.id.action_settings: //Open settings
                 Intent i = new Intent(MyActivity.this, SettingsActivity.class);
                 startActivity(i);
                 return true;
@@ -76,40 +74,12 @@ public class MyActivity extends Activity {
         }
     }
 
-    public void createNotification(View view) {
-        // Prepare intent which is triggered if the
-        // notification is selected
-        Intent intent = new Intent(this, MyActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        // Build notification
-        // Actions are just fake
-        Notification noti = new Notification.Builder(this)
-                .setContentTitle("Plantomatic")
-                .setContentText("Click here to read").setSmallIcon(R.drawable.ic_action_search)
-                .setContentIntent(pIntent)
-                .build();
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        // hide the notification after its selected
-        noti.flags |= Notification.FLAG_AUTO_CANCEL;
-
-        notificationManager.notify(0, noti);
-    }
-
-    /*public void sendMessage(View view){
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        EditText editText = (EditText)findViewById(R.id.edit_message);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }*/
-
     public void updateView(JSONObject json){
         if(json != null) {
             try {
                 setContentView(R.layout.activity_my);
                 linearLayout = (LinearLayout) findViewById(R.id.layout);
-                Log.d("updateView", json.getString("Data"));
+                //Log.d("updateView", json.getString("Data")); //Log for debugging
 
                 JSONArray jsonArray = json.getJSONArray("Data");
                 //Loop through Data array
@@ -119,6 +89,7 @@ public class MyActivity extends Activity {
                     childCard.setBackgroundColor(Color.parseColor("#2196F3"));
                     //LinearLayout childLinear = (LinearLayout) childCard.findViewById(R.id.inner_linear);
 
+                    //Assign all the elements
                     final TextView txID = (TextView) child.findViewById(R.id.text_id);
                     TextView txName = (TextView) child.findViewById(R.id.text_name);
                     TextView txTypeName = (TextView) child.findViewById(R.id.text_type);
@@ -142,9 +113,8 @@ public class MyActivity extends Activity {
                         int minLight = 0;
                         int minMoist = 0;
 
-
-                        JSONArray jAr = c.getJSONArray("type");
-                        for (int j = 0; j < jAr.length(); j++) {
+                        JSONArray jAr = c.getJSONArray("type"); //'type' array
+                        for (int j = 0; j < jAr.length(); j++) { //Get 'type' min & max
                             try {
                                 JSONObject d = jAr.getJSONObject(j);
                                 txTypeName.setText(d.getString("name"));
@@ -160,10 +130,11 @@ public class MyActivity extends Activity {
                                 pbMoist.setMax(maxMoist);
 
                             } catch (JSONException e) {
+                                e.printStackTrace();
                             }
                         }
-                        JSONArray jArr = c.getJSONArray("lastData");
-                        for (int j = 0; j < jArr.length(); j++) {
+                        JSONArray jArr = c.getJSONArray("lastData"); //'lastData' array
+                        for (int j = 0; j < jArr.length(); j++) { //Set texts & progressbars
                             try {
                                 JSONObject d = jArr.getJSONObject(j);
                                 txTemp.setText("Temp: " + d.getString("temp"));
@@ -180,26 +151,28 @@ public class MyActivity extends Activity {
                                 new ProgressBarStatus(pbMoist, minMoist, maxMoist, moist).setProgressBar();
 
                             } catch (JSONException e) {
+                                e.printStackTrace();
                             }
                         }
                     } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    linearLayout.addView(child);
+                    linearLayout.addView(child); //Add everything to the layout
                     linearLayout.setOrientation(LinearLayout.VERTICAL);
 
-                    childCard.setOnClickListener(new View.OnClickListener() {
+                    childCard.setOnClickListener(new View.OnClickListener() { //Click event per cardview
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(MyActivity.this, DisplayMessageActivity.class);
                             String message = txID.getText().toString();
-                            intent.putExtra(EXTRA_MESSAGE, message);
+                            intent.putExtra(EXTRA_MESSAGE, message); //Pass ID of plant with it
                             startActivity(intent);
                         }
                     });
                 }
                 Toast.makeText(this, "Refreshed", Toast.LENGTH_SHORT).show();
             } catch (JSONException e) {
-                //
+                e.printStackTrace();
             }
         } else {
             Toast.makeText(this, "Could not refresh", Toast.LENGTH_SHORT).show();
