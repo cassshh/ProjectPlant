@@ -73,14 +73,14 @@ public class UpdateServiceManager extends Service {
                 public void run() {
                     //Get all the preferences in settings, if not exist, default value
                     notify = pref.getBoolean("pref_notify", true);
-                    fineNotify = pref.getString("pref_fine", "I'm fine");
-                    tempNotify = pref.getString("pref_temp", "Plant temperature is nawt perf");
-                    lightNotify = pref.getString("pref_light", "Plant light is nawt perf");
-                    moistNotify = pref.getString("pref_moist", "Plant moist is nawt perf");
-                    temp_lightNotify = pref.getString("pref_temp_light", "Plant temperature and light is nawt perf");
-                    temp_moistNotify = pref.getString("pref_temp_light", "Plant temperature and moist is nawt perf");
-                    light_moistNotify = pref.getString("pref_light_moist", "Plant light and moist is nawt perf");
-                    temp_light_moistNotify = pref.getString("pref_temp_light_light", "Plant probably dieded trice");
+                    fineNotify = pref.getString("pref_fine", "");
+                    tempNotify = pref.getString("pref_temp", "Prr check out mah temp");
+                    lightNotify = pref.getString("pref_light", "Check out the light");
+                    moistNotify = pref.getString("pref_moist", "Check my ground moist");
+                    temp_lightNotify = pref.getString("pref_temp_light", "Temperature and light pls");
+                    temp_moistNotify = pref.getString("pref_temp_light", "Temperature and moist are not ok");
+                    light_moistNotify = pref.getString("pref_light_moist", "Light and moist pls");
+                    temp_light_moistNotify = pref.getString("pref_temp_light_light", "I think i just died");
                     if (notify) { //if notification are turned on
                         new JsonData(UpdateServiceManager.TimeDisplayTimerTask.this, "http://casnetwork.tk/plant/data.php?notification").execute();
                     }

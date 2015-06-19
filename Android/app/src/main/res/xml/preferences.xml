@@ -39,60 +39,51 @@
             android:defaultValue=""
             android:dependency="pref_notify"
             android:key="pref_fine"
-            android:summary="Plant is perf"
+            android:summary="Plant is fine"
             android:title="Fine" />
         <EditTextPreference
             android:defaultValue="Prr check out mah temp"
             android:dependency="pref_notify"
             android:key="pref_temp"
-            android:summary="Plant temperature is nawt perf"
+            android:summary="Plant temperature is not alright"
             android:title="Temperature" />
         <EditTextPreference
-            android:defaultValue="Damm dat light dou"
+            android:defaultValue="Check out the light"
             android:dependency="pref_notify"
             android:key="pref_light"
-            android:summary="Plant light is nawt perf"
+            android:summary="Plant light is not alright"
             android:title="Light" />
         <EditTextPreference
-            android:defaultValue="Check out my moist ._."
+            android:defaultValue="Check my ground moist"
             android:dependency="pref_notify"
             android:key="pref_moist"
-            android:summary="Plant moist is nawt perf"
+            android:summary="Plant moist is not alright"
             android:title="Moist" />
         <EditTextPreference
-            android:defaultValue="Temperature and light pls. fix it"
+            android:defaultValue="Temperature and light pls"
             android:dependency="pref_notify"
             android:key="pref_temp_light"
-            android:summary="Plant temperature and light is nawt perf"
+            android:summary="Plant temperature and light are not alright"
             android:title="Temperature and Light" />
         <EditTextPreference
-            android:defaultValue="Temperature and mosit r nawt ok"
+            android:defaultValue="Temperature and moist are not ok"
             android:dependency="pref_notify"
             android:key="pref_temp_moist"
-            android:summary="Plant temperature and moist is nawt perf"
+            android:summary="Plant temperature and moist are not alright"
             android:title="Temperature and Moist" />
         <EditTextPreference
             android:defaultValue="Light and moist pls"
             android:dependency="pref_notify"
             android:key="pref_light_moist"
-            android:summary="Plant light and moist is nawt perf"
+            android:summary="Plant light and moist are not alright"
             android:title="Light and Moist" />
         <EditTextPreference
-            android:defaultValue="Get your shit together bruh..."
+            android:defaultValue="I think i just died"
             android:dependency="pref_notify"
             android:key="pref_temp_light_moist"
-            android:summary="Plant probably dieded trice"
-            android:title="When u fckd aph" />
+            android:summary="Plant temperature, light and moist are not alright"
+            android:title="Temperature, Light and Moist" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Random">
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_ran"
-            android:summary="Checking meh out"
-            android:title="Random" />
-
-    </PreferenceCategory>
 </PreferenceScreen>
