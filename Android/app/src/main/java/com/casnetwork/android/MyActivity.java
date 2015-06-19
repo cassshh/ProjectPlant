@@ -106,6 +106,7 @@ public class MyActivity extends Activity {
                         txID.setText(c.getString("plant_id"));
                         txName.setText(c.getString("name"));
 
+                        //Default values
                         int maxTemp = 100;
                         int maxLight = 100;
                         int maxMoist = 100;
@@ -142,10 +143,12 @@ public class MyActivity extends Activity {
                                 txMoist.setText("Moist: " + d.getString("moist"));
                                 txLastdate.setText(d.getString("dateTime"));
 
+                                //Set values
                                 int temp = d.getInt("temp");
                                 int light = d.getInt("light");
                                 int moist = d.getInt("moist");
 
+                                //Create progressbars
                                 new ProgressBarStatus(pbTemp, minTemp, maxTemp, temp).setProgressBar();
                                 new ProgressBarStatus(pbLight, minLight, maxLight, light).setProgressBar();
                                 new ProgressBarStatus(pbMoist, minMoist, maxMoist, moist).setProgressBar();
@@ -160,6 +163,7 @@ public class MyActivity extends Activity {
                     linearLayout.addView(child); //Add everything to the layout
                     linearLayout.setOrientation(LinearLayout.VERTICAL);
 
+                    //Click events
                     childCard.setOnClickListener(new View.OnClickListener() { //Click event per cardview
                         @Override
                         public void onClick(View v) {

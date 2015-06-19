@@ -145,7 +145,6 @@ public class DisplayMessageActivity extends Activity {
                             linearLayout.addView(linLay);
                             linLay.setOrientation(LinearLayout.VERTICAL);
                             linLay.setPadding(40, 40, 40, 40);
-                            //linLay.setBackgroundColor(Color.parseColor("#ddeedd"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -184,8 +183,6 @@ public class DisplayMessageActivity extends Activity {
                                 if (i == jsonArrayGraph.length() - 1) {
                                     calendar.setTime(date);
                                     d = calendar.getTime();
-                                    //Toast.makeText(this, "Last Time: " + d.toString(), Toast.LENGTH_LONG).show();
-                                    //Toast.makeText(this, Integer.toString(calendar.get(Calendar.HOUR_OF_DAY)), Toast.LENGTH_SHORT).show();
                                 }
                                 //Set datapoints
                                 DataPoint dpTemp = new DataPoint(date.getTime(), c.getDouble("temp"));
@@ -220,7 +217,6 @@ public class DisplayMessageActivity extends Activity {
                             e.printStackTrace();
                         }
                     }
-                    //Toast.makeText(this, d.toString(), Toast.LENGTH_LONG).show();
                     //Add series
                     graphTemp.addSeries(seriesTemp);
                     graphTemp.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));

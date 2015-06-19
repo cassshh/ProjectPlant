@@ -2,15 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.casnetwork.android">
 
+    <!-- Internet permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.no" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <!--aandroid:theme="@style/AppTheme"-->
         <activity
             android:name=".MyActivity"
             android:label="@string/app_name">
@@ -37,7 +36,7 @@
                 android:value="com.casnetwork.android.MyActivity" />
         </activity>
 
-        <!-- Serivce -->
+        <!-- Serivce for notifications -->
         <service
             android:name=".UpdateServiceManager"
             android:enabled="true"

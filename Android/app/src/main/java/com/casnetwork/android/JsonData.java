@@ -28,6 +28,7 @@ public class JsonData extends AsyncTask<String, Void, JSONObject> {
     UpdateServiceManager.TimeDisplayTimerTask callerUpdate = null;
     ProgressDialog pDialog = null;
 
+    //Constuctors
     public JsonData(MyActivity caller, String url) {
         this.caller = caller;
         this.url = url;
@@ -45,7 +46,7 @@ public class JsonData extends AsyncTask<String, Void, JSONObject> {
     protected void onPreExecute() {
         super.onPreExecute();
         // Showing progress dialog
-        if (caller != null) {
+        if (caller != null) { //set pDialog
             pDialog = new ProgressDialog(caller);
             pDialog.setMessage("Please wait...");
             pDialog.setCancelable(true);
